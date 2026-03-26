@@ -32,7 +32,7 @@ The Reviewer will be loaded with all of this context as its conformance baseline
 
 Check whether `.claude/agents/reviewer.md` already exists.
 
-- If it exists: tell the user a Reviewer persona already exists, and ask: **update it or start fresh?**
+- If it exists: tell the user a Reviewer persona already exists, then use `ask_followup_question` with follow_up_suggestions: `Update it`, `Start fresh`
   - **Update:** read `teambuilder.answers` from the existing file's YAML frontmatter — use these as pre-filled defaults
   - **Start fresh:** ignore the existing file, no defaults
 - If it doesn't exist: proceed with no defaults
@@ -41,14 +41,11 @@ Check whether `.claude/agents/reviewer.md` already exists.
 
 Ask the following questions **one at a time**. Show pre-filled defaults in the update flow.
 
-1. **What is your Git and review workflow?** (choose one)
-   - Pre-commit: review before committing to the local repo
-   - Local branch + merge review: branch locally, review before merging to main
-   - PR-based: branch, push, open pull request — Reviewer engages with the PR
+1. **What is your Git and review workflow?** — use `ask_followup_question` with follow_up_suggestions: `Pre-commit — review before committing`, `Local branch + merge review`, `PR-based — open a pull request`
 
-2. **Commit conventions?** (Conventional Commits — feat/fix/chore/etc.; custom format — describe it; freeform / no convention)
+2. **Commit conventions?** — use `ask_followup_question` with follow_up_suggestions: `Conventional Commits (feat/fix/chore/etc.)`, `Custom format`, `Freeform / no convention`
 
-3. **Branching strategy?** (trunk-based development; gitflow; other — describe it)
+3. **Branching strategy?** — use `ask_followup_question` with follow_up_suggestions: `Trunk-based development`, `Gitflow`, `Other`
 
 **Default blocking issues** — present this list and ask the user to confirm, add, or remove any:
 
@@ -61,7 +58,7 @@ Ask the following questions **one at a time**. Show pre-filled defaults in the u
 >
 > Do you want to add anything, remove anything, or promote any warnings to blocking?
 
-4. **Any additions or changes to the blocking issues list?**
+4. **Any additions or changes to the blocking issues list?** (type changes, or say "looks good")
 
 **Default warnings** — present this list and ask the user to confirm, add, remove, or promote any to blocking:
 
@@ -74,11 +71,11 @@ Ask the following questions **one at a time**. Show pre-filled defaults in the u
 >
 > Do you want to add anything, remove anything, or promote any to blocking?
 
-5. **Any additions or changes to the warnings list?**
+5. **Any additions or changes to the warnings list?** (type changes, or say "looks good")
 
-6. **How verbose should review output be?** (detailed — explain each finding with context and rationale; standard — finding + brief explanation; terse — list of issues only)
+6. **How verbose should review output be?** — use `ask_followup_question` with follow_up_suggestions: `Detailed — explain each finding with context and rationale`, `Standard — finding + brief explanation`, `Terse — list of issues only`
 
-7. **Should the Reviewer suggest fixes, or only identify issues?** (suggest fixes when possible; identify issues only, leave fixing to the Programmer)
+7. **Should the Reviewer suggest fixes?** — use `ask_followup_question` with follow_up_suggestions: `Suggest fixes when possible`, `Identify issues only — leave fixing to the Programmer`
 
 ## Step 4: Write `reviewer.md`
 

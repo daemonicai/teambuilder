@@ -24,7 +24,7 @@ From `architect.md` (if present): extract platform choices (web, iOS, Android, d
 
 Check whether `.claude/agents/designer.md` already exists.
 
-- If it exists: tell the user a Designer persona already exists, and ask: **update it or start fresh?**
+- If it exists: tell the user a Designer persona already exists, then use `ask_followup_question` with follow_up_suggestions: `Update it`, `Start fresh`
   - **Update:** read `teambuilder.answers` from the existing file's YAML frontmatter — use these as pre-filled defaults
   - **Start fresh:** ignore the existing file, no defaults
 - If it doesn't exist: proceed with no defaults
@@ -37,10 +37,10 @@ Ask the following questions **one at a time**. Show pre-filled defaults in the u
 
 1. **What branding inputs exist?** (colors, typefaces, logos, existing style guides or brand guidelines — or "none / TBD")
 2. **Is there an existing design system or component library?** (e.g., Material UI, Shadcn/ui, Apple HIG, Ant Design, custom — or "none")
-3. **What are the accessibility requirements?** (WCAG A, AA, or AAA — and any specific needs beyond the standard)
-4. **What are the primary documentation outputs?** (select all that apply: wireframes, user flow diagrams, design guidelines / style guide, CSS / token specs)
-5. **How opinionated should the Designer be?** (pushes back on UX anti-patterns and defends decisions; or presents options without judgment and lets you choose)
-6. **Verbosity preference for documentation?** (detailed specs with exact values and rationale; or high-level guidance and principles)
+3. **What are the accessibility requirements?** — use `ask_followup_question` with follow_up_suggestions: `WCAG A`, `WCAG AA`, `WCAG AAA`, `No specific requirement`
+4. **What are the primary documentation outputs?** (ask the user to select all that apply — list: wireframes, user flow diagrams, design guidelines / style guide, CSS / token specs)
+5. **How opinionated should the Designer be?** — use `ask_followup_question` with follow_up_suggestions: `Opinionated — push back on bad UX and defend decisions`, `Balanced — present options without judgment`
+6. **Verbosity preference for documentation?** — use `ask_followup_question` with follow_up_suggestions: `Detailed specs with exact values and rationale`, `High-level guidance and principles`
 
 **Adaptive — based on Analyst output:**
 
@@ -49,10 +49,11 @@ Ask the following questions **one at a time**. Show pre-filled defaults in the u
 
 **Adaptive — based on Architect output (ask per platform identified):**
 
-- If **web**: "What is the responsive strategy? (mobile-first, desktop-first, or equal priority) What browser support constraints apply?"
-- If **iOS**: "What level of HIG adherence? (strict — follow Apple's guidelines closely; informed — respect HIG but diverge for brand; custom — brand-first)"
-- If **Android**: "Material Design adherence level? (strict, informed, or custom brand-first)"
-- If **cross-platform** (multiple surfaces): "Consistency-first (same look everywhere) or platform-native conventions per surface?"
+- If **web**: "What is the responsive strategy?" — use `ask_followup_question` with follow_up_suggestions: `Mobile-first`, `Desktop-first`, `Equal priority`
+  Then: "Any browser support constraints?"
+- If **iOS**: "What level of HIG adherence?" — use `ask_followup_question` with follow_up_suggestions: `Strict — follow Apple guidelines closely`, `Informed — respect HIG but diverge for brand`, `Custom — brand-first`
+- If **Android**: "Material Design adherence level?" — use `ask_followup_question` with follow_up_suggestions: `Strict`, `Informed`, `Custom — brand-first`
+- If **cross-platform** (multiple surfaces): use `ask_followup_question` with follow_up_suggestions: `Consistency-first — same look everywhere`, `Platform-native conventions per surface`
 - If **component library present**: "Which components from [library] are in scope for design, and which areas will use custom components?"
 
 ## Step 4: Write `designer.md`

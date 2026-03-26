@@ -14,7 +14,7 @@ Read `.claude/agents/_project.md` and `.claude/agents/_team.md` if they exist. I
 
 Check whether `.claude/agents/analyst.md` already exists.
 
-- If it exists: tell the user an Analyst persona already exists, and ask: **update it or start fresh?**
+- If it exists: tell the user an Analyst persona already exists, then use `ask_followup_question` with follow_up_suggestions: `Update it`, `Start fresh`
   - **Update:** read `teambuilder.answers` from the existing file's YAML frontmatter — you'll use these as pre-filled defaults in the questions below
   - **Start fresh:** ignore the existing file, no defaults
 - If it doesn't exist: proceed with no defaults
@@ -26,12 +26,12 @@ Ask the following questions **one at a time**, waiting for each answer. If you h
 1. **What is the project about?** (description, goals, vision — be as detailed as you like)
 2. **Who are the stakeholders?** (people or teams with interest in the outcome, not necessarily the end users)
 3. **Who are the end users?** (types of people using the product, approximate scale, any notable characteristics)
-4. **What kind of application is this?** (web app, mobile app, API/backend service, desktop app, game, embedded system, CLI tool, other)
+4. **What kind of application is this?** — use `ask_followup_question` with follow_up_suggestions: `Web app`, `Mobile app`, `API / backend service`, `Desktop app`, `Game`, `Embedded system`, `CLI tool`, `Other`
 5. **Are there any known constraints?** (regulatory requirements, compliance, budget, timeline, existing tech commitments — or "none")
 6. **What domain expertise should the Analyst have?** (what does an expert in this field deeply understand? e.g., for fintech: payment rails, regulatory reporting, fraud patterns)
 7. **Are there existing documents or requirements to work from?** (links, file paths, or descriptions — or "none")
-8. **What format do you prefer for requirements?** (user stories, use cases, jobs-to-be-done, freeform prose, or a mix)
-9. **What communication style do you want from the Analyst?** (socratic — asks lots of probing questions; direct — gives structured answers; structured — always uses headers and lists)
+8. **What format do you prefer for requirements?** — use `ask_followup_question` with follow_up_suggestions: `User stories`, `Use cases`, `Jobs-to-be-done`, `Freeform prose`, `Mix of formats`
+9. **What communication style do you want from the Analyst?** — use `ask_followup_question` with follow_up_suggestions: `Socratic — asks probing questions`, `Direct — gives structured answers`, `Structured — always uses headers and lists`
 10. **What is explicitly out of scope for this project?** (things the Analyst should know NOT to explore or suggest)
 
 ## Step 4: Write `analyst.md`

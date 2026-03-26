@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="https://github.com/rendle/teambuilder.git"
+REPO_URL="https://github.com/daemonicai/teambuild.git"
 INSTALL_DIR="${HOME}/.claude/teambuilder"
 COMMANDS_SRC="${INSTALL_DIR}/commands/teambuild"
 COMMANDS_DST="${HOME}/.claude/commands/teambuild"

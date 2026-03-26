@@ -22,14 +22,14 @@ From `architect.md` (if present): extract the technology choices — language, f
 
 **If VARIANT is set:**
 - Check whether `.claude/agents/programmer.md` exists
-- If it does NOT exist: warn the user — "No base Programmer persona found. It's recommended to run `/teambuild:programmer` first to establish cross-cutting conventions, then run `/teambuild:programmer [VARIANT]` for variant-specific settings." Ask: proceed anyway (full question set) or cancel?
+- If it does NOT exist: warn the user — "No base Programmer persona found. It's recommended to run `/teambuild:programmer` first to establish cross-cutting conventions, then run `/teambuild:programmer [VARIANT]` for variant-specific settings." Then use `ask_followup_question` with follow_up_suggestions: `Proceed anyway`, `Cancel`
 - If it DOES exist: read `teambuilder.answers` from its frontmatter — these are the cross-cutting conventions you'll use as defaults for shared questions
 
 ## Step 2: Check for existing persona
 
 Check whether `.claude/agents/programmer.md` (or `programmer-{VARIANT}.md` if variant) already exists.
 
-- If it exists: tell the user the persona already exists, and ask: **update it or start fresh?**
+- If it exists: tell the user the persona already exists, then use `ask_followup_question` with follow_up_suggestions: `Update it`, `Start fresh`
   - **Update:** read `teambuilder.answers` from the existing file — use as pre-filled defaults
   - **Start fresh:** ignore the existing file
 - If it doesn't exist: proceed with no defaults
@@ -41,30 +41,30 @@ Ask the following questions **one at a time**. In the variant flow, cross-cuttin
 **Language and framework (adaptive, informed by Architect):**
 
 - If Architect specified both language AND framework: skip language/framework selection; go directly to ecosystem-specific conventions below
-- If Architect specified language but not framework: "The Architect specified [language]. Which framework are you using?" — present the 2-3 most appropriate options with brief guidance
-- If Architect left tech open: "What's the primary domain of this programmer? (API/backend, web frontend, mobile iOS, mobile Android, CLI, desktop, other)" — then guide through language and framework selection with opinionated recommendations based on the requirements
+- If Architect specified language but not framework: "The Architect specified [language]. Which framework are you using?" — present the 2-3 most appropriate options as follow_up_suggestions
+- If Architect left tech open: "What's the primary domain of this programmer?" — use `ask_followup_question` with follow_up_suggestions: `API / backend`, `Web frontend`, `Mobile iOS`, `Mobile Android`, `CLI`, `Desktop`, `Other` — then guide through language and framework selection with opinionated recommendations based on the requirements
 
 **Ecosystem-specific conventions (ask based on chosen language):**
-- **Go:** Module structure preferences? Interface conventions (define at usage site vs. declaration site)? Context propagation approach?
-- **TypeScript/JS:** Strict mode? Module system (ESM, CJS)? Async patterns (async/await first, or RxJS/streams)?
-- **Swift:** SwiftUI vs UIKit? Combine vs async/await? Swift concurrency (actors, structured concurrency)?
-- **Python:** Type hints (required, optional, or none)? Sync vs async? Packaging approach (uv, pip, poetry)?
+- **Go:** Module structure preferences? Interface conventions — use `ask_followup_question` with follow_up_suggestions: `Define at usage site`, `Define at declaration site`, `No preference`. Context propagation approach?
+- **TypeScript/JS:** Strict mode? use `ask_followup_question` with follow_up_suggestions: `Strict mode on`, `Strict mode off`. Module system — use `ask_followup_question` with follow_up_suggestions: `ESM`, `CommonJS`, `Context-dependent`. Async patterns — use `ask_followup_question` with follow_up_suggestions: `async/await first`, `RxJS / streams`, `Mixed`
+- **Swift:** use `ask_followup_question` with follow_up_suggestions: `SwiftUI`, `UIKit`, `Both`. Concurrency — use `ask_followup_question` with follow_up_suggestions: `async/await and structured concurrency`, `Combine`, `Mixed`
+- **Python:** Type hints — use `ask_followup_question` with follow_up_suggestions: `Required on all public APIs`, `Optional / encouraged`, `Not used`. Runtime — use `ask_followup_question` with follow_up_suggestions: `Sync`, `Async`, `Mixed`. Packaging — use `ask_followup_question` with follow_up_suggestions: `uv`, `pip`, `poetry`, `other`
 - **Other languages:** Ask the most important 2-3 convention questions for that ecosystem
 
 **Cross-cutting conventions (always ask, or confirm from base programmer.md in variant flow):**
 
-1. **Error handling philosophy?** (explicit result types / Either/Result; exceptions; panic-and-recover; mixed — describe)
+1. **Error handling philosophy?** — use `ask_followup_question` with follow_up_suggestions: `Explicit result types (Result/Either)`, `Exceptions`, `Panic-and-recover`, `Mixed — describe in follow-up`
 2. **Logging and observability?** (structured logging? log levels used? what events must be logged?)
-3. **Telemetry?** (OpenTelemetry by default; platform/language-specific SDK; what operations must be instrumented — HTTP handlers, DB calls, background jobs?)
-4. **Dependency philosophy?** (minimal — prefer stdlib; pragmatic — use well-maintained libraries freely; specific sources only, e.g., only OSS with >X stars)
-5. **Code documentation?** (inline comments for non-obvious logic only; docstrings on all public APIs; self-documenting code, no comments; README per package)
-6. **Testing approach?** (TDD — write tests first; test-after; pragmatic — depends on complexity. Unit test coverage expectation: none specified / aim for X%)
-7. **Patterns and paradigms?** (prefer functional style; prefer OOP; mixed pragmatic. Any patterns explicitly banned or required?)
+3. **Telemetry?** — use `ask_followup_question` with follow_up_suggestions: `OpenTelemetry`, `Platform/language-specific SDK`, `None` — then ask what operations must be instrumented (HTTP handlers, DB calls, background jobs)
+4. **Dependency philosophy?** — use `ask_followup_question` with follow_up_suggestions: `Minimal — prefer stdlib`, `Pragmatic — use well-maintained libraries freely`, `Specific sources only`
+5. **Code documentation?** — use `ask_followup_question` with follow_up_suggestions: `Inline comments for non-obvious logic only`, `Docstrings on all public APIs`, `Self-documenting code, no comments`, `README per package`
+6. **Testing approach?** — use `ask_followup_question` with follow_up_suggestions: `TDD — write tests first`, `Test-after`, `Pragmatic — depends on complexity` — then ask about coverage expectation
+7. **Patterns and paradigms?** — use `ask_followup_question` with follow_up_suggestions: `Prefer functional style`, `Prefer OOP`, `Mixed / pragmatic` — then ask if any patterns are explicitly banned or required
 
 **Persona configuration:**
 
-8. **Convention strictness?** (strict — flag any deviation from agreed conventions; pragmatic — use judgment, flag only meaningful deviations)
-9. **Scope of suggestions?** (focused — address only the immediate task; proactive — suggest improvements to surrounding code when relevant)
+8. **Convention strictness?** — use `ask_followup_question` with follow_up_suggestions: `Strict — flag any deviation`, `Pragmatic — flag only meaningful deviations`
+9. **Scope of suggestions?** — use `ask_followup_question` with follow_up_suggestions: `Focused — address only the immediate task`, `Proactive — suggest improvements to surrounding code when relevant`
 
 ## Step 4: Write the persona file
 

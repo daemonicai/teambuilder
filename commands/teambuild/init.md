@@ -8,7 +8,7 @@ You are running the `/teambuild:init` setup flow. Your job is to gather basic pr
 
 Check whether `.claude/agents/_project.md` already exists.
 
-- If it exists, tell the user a project context already exists and ask: **overwrite it or cancel?**
+- If it exists, tell the user a project context already exists and ask using `ask_followup_question` with follow_up_suggestions: `Overwrite`, `Cancel`
 - If they choose cancel, stop here.
 - If it doesn't exist (or they choose to overwrite), continue.
 
@@ -23,10 +23,7 @@ Ask the following questions **one at a time**, waiting for each answer before co
 1. **What's the project name?**
 2. **What organization or team is this for?** (Can be personal/solo if applicable)
 3. **What industry or domain is this in?** (e.g., fintech, healthcare, e-commerce, internal tooling, game development)
-4. **What stage is the project at?**
-   - New (greenfield)
-   - Existing (active development)
-   - Legacy (maintenance/migration)
+4. **What stage is the project at?** — use `ask_followup_question` with these exact follow_up_suggestions: `New (greenfield)`, `Existing (active development)`, `Legacy (maintenance/migration)`
 
 ## Step 4: Write `_project.md`
 
