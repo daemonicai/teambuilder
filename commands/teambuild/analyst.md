@@ -127,11 +127,10 @@ If `_team.md` currently contains `*No personas created yet.*`, replace that line
 
 ## Step 6: Confirm
 
-Tell the user:
+Tell the user the Analyst persona has been saved to `.claude/agents/analyst.md`.
 
-> Analyst persona saved to `.claude/agents/analyst.md`.
->
-> Next: run `/teambuild:architect` to build your Architect persona, or use your Analyst now with:
-> ```
-> claude --system-prompt-file .claude/agents/analyst.md
-> ```
+Then use `ask_followup_question` with follow_up_suggestions: `Start a requirements session now`, `Build the Architect persona next`, `I'm done for now`
+
+- If **Start a requirements session now**: invoke the `analyst` sub-agent (from `.claude/agents/analyst.md`). Act as orchestrator — relay the analyst's questions to the user and pass answers back. The user is now in a live requirements gathering session.
+- If **Build the Architect persona next**: proceed directly as if the user has run `/teambuild:architect`.
+- If **I'm done for now**: let the user know they can start a session anytime by saying "use the analyst" or run `claude --system-prompt-file .claude/agents/analyst.md` for a standalone session.

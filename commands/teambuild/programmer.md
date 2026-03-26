@@ -167,13 +167,12 @@ Implementation expert. Language: [language]. Framework: [framework]. Testing: [t
 
 ## Step 6: Confirm
 
-Tell the user:
+Tell the user the Programmer persona has been saved to `.claude/agents/programmer[if variant: -VARIANT].md`.
 
-> Programmer persona saved to `.claude/agents/programmer[if variant: -VARIANT].md`.
->
-> Next: run `/teambuild:tester` to build your Tester persona, or use your Programmer now with:
-> ```
-> claude --system-prompt-file .claude/agents/programmer[if variant: -VARIANT].md
-> ```
->
-> [If no base programmer exists and this was a variant, remind: Run `/teambuild:programmer` to create a base persona with cross-cutting conventions that variants can inherit.]
+Then use `ask_followup_question` with follow_up_suggestions: `Start a programming session now`, `Build the Tester persona next`, `I'm done for now`
+
+- If **Start a programming session now**: invoke the `programmer` (or `programmer-VARIANT`) sub-agent (from `.claude/agents/programmer[if variant: -VARIANT].md`). Act as orchestrator — relay questions and outputs to the user and pass responses back.
+- If **Build the Tester persona next**: proceed directly as if the user has run `/teambuild:tester`.
+- If **I'm done for now**: let the user know they can start a session anytime by saying "use the programmer" or run `claude --system-prompt-file .claude/agents/programmer[if variant: -VARIANT].md` for a standalone session.
+
+[If no base programmer exists and this was a variant, also remind: Run `/teambuild:programmer` to create a base persona with cross-cutting conventions that variants can inherit.]

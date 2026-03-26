@@ -180,11 +180,10 @@ Quality and verification expert. Test types: [list from Q1]. Quality gate: [brie
 
 ## Step 6: Confirm
 
-Tell the user:
+Tell the user the Tester persona has been saved to `.claude/agents/tester.md`.
 
-> Tester persona saved to `.claude/agents/tester.md`.
->
-> Next: run `/teambuild:reviewer` to build your Reviewer persona, or use your Tester now with:
-> ```
-> claude --system-prompt-file .claude/agents/tester.md
-> ```
+Then use `ask_followup_question` with follow_up_suggestions: `Start a testing session now`, `Build the Reviewer persona next`, `I'm done for now`
+
+- If **Start a testing session now**: invoke the `tester` sub-agent (from `.claude/agents/tester.md`). Act as orchestrator — relay the tester's questions and outputs to the user and pass responses back.
+- If **Build the Reviewer persona next**: proceed directly as if the user has run `/teambuild:reviewer`.
+- If **I'm done for now**: let the user know they can start a session anytime by saying "use the tester" or run `claude --system-prompt-file .claude/agents/tester.md` for a standalone session.
