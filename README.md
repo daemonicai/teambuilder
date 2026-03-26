@@ -2,20 +2,14 @@
 
 Build a team of opinionated AI agent personas for your project.
 
-Teambuilder is a set of Claude Code skills that guide you through creating specialized agent personas — an Analyst, Architect, Designer, Programmer, Tester, and Reviewer — each with a distinct role, expertise, and perspective. Each persona is a self-contained system prompt file you can use with `claude --system-prompt-file`.
-
-## Why?
-
-Different tasks benefit from different expert perspectives. A requirements conversation needs a different mindset than a code review. But writing good system prompts from scratch is tedious, and most people just skip it.
-
-Teambuilder gives you opinionated, project-aware personas through a guided creation flow that asks the right questions for each role.
+Teambuilder is a set of Claude Code skills that guide you through creating specialized agent personas — an Analyst, Architect, Designer, Programmer, Tester, and Reviewer — each with a distinct role, expertise, and perspective on your specific project.
 
 ## Install
 
 ### macOS / Linux
 
 ```bash
-curl -fsSL https://daemonic.github.io/teambuilder/install.sh | bash
+curl -fsSL https://daemonicai.github.io/teambuilder/install.sh | bash
 ```
 
 Re-running updates an existing installation.
@@ -23,7 +17,7 @@ Re-running updates an existing installation.
 ### Windows
 
 ```powershell
-irm https://daemonic.github.io/teambuilder/install.ps1 | iex
+irm https://daemonicai.github.io/teambuilder/install.ps1 | iex
 ```
 
 ---
@@ -36,7 +30,7 @@ irm https://daemonic.github.io/teambuilder/install.ps1 | iex
 /teambuild:init
 ```
 
-Gathers basic project context (name, org, domain, stage) and sets up the `.claude/agents/` directory.
+Asks for your project name, organization, domain, and stage. Writes `_project.md` and `_team.md` to `.claude/agents/`.
 
 ### 2. Build your team, one persona at a time
 
@@ -49,15 +43,16 @@ Gathers basic project context (name, org, domain, stage) and sets up the `.claud
 /teambuild:reviewer
 ```
 
-Each skill asks you targeted questions for that role and generates a persona file. The order matters — each persona's output informs the next. The Analyst's requirements shape the Architect. The architecture shapes the Programmer. This isn't enforced, but it's how you get the best results.
+Each skill asks you targeted questions for that role — with clickable options where choices are fixed — and generates a persona file. Each skill reads what the previous personas produced, so questions get smarter as you go. The Analyst's requirements shape the Architect's questions. The architecture informs the Programmer's conventions.
 
-### 3. Use your personas
+The order isn't enforced, but it's how you get the best results.
 
-```bash
-claude --system-prompt-file .claude/agents/analyst.md
-```
+### 3. Use your personas — in session or standalone
 
-Each persona file is fully self-contained. No dependencies, no runtime config. Just a system prompt that knows your project and has a clear role.
+After each persona is created, you can:
+
+- **Start a session immediately** — the persona runs as a sub-agent inside your current Claude Code session. Ask it questions, gather requirements, review code — all inline, no new terminal needed.
+- **Use it later** — say "use the analyst" at any point and Claude Code will invoke it. Or run it standalone: `claude --system-prompt-file .claude/agents/analyst.md`
 
 ### Variants
 
@@ -68,7 +63,13 @@ Some roles need multiple instances. A project with an iOS app and a REST API nee
 /teambuild:programmer api
 ```
 
-This produces `programmer-ios.md` and `programmer-api.md`.
+This produces `programmer-ios.md` and `programmer-api.md`. The variant inherits cross-cutting conventions (error handling, logging, testing approach) from the base programmer persona.
+
+### Updating a persona
+
+Re-run any skill at any time. Teambuilder detects the existing persona and asks whether to update it (pre-filling your previous answers so you only change what's different) or start fresh.
+
+---
 
 ## The team
 
@@ -78,8 +79,8 @@ This produces `programmer-ios.md` and `programmer-api.md`.
 | **Architect** | System design, technology choices, structure | UI specifics, test strategy |
 | **Designer** | UX/UI, interaction design, platform conventions | Backend details |
 | **Programmer** | Implementation, code, conventions | Business strategy |
-| **Tester** | Quality, verification, edge cases | Implementation details |
-| **Reviewer** | Code review, quality gates, standards | — |
+| **Tester** | Quality, verification, test strategy | Unit tests (that's the Programmer) |
+| **Reviewer** | Conformance, quality gates, code review | Re-litigating upstream decisions |
 
 Each persona has a **fixed core** (role identity, stance, boundaries) defined by Teambuilder, plus **variable parts** (domain expertise, project context, conventions) gathered from your answers.
 
@@ -92,16 +93,15 @@ Each persona has a **fixed core** (role identity, stance, boundaries) defined by
 ├── analyst.md           # Self-contained persona files
 ├── architect.md
 ├── designer.md
-├── programmer-ios.md
+├── programmer.md
+├── programmer-ios.md    # Variant — inherits base conventions
 ├── programmer-api.md
 ├── tester.md
 └── reviewer.md
 ```
 
-## Status
-
-Teambuilder is in early design. See [DEVLOG.md](DEVLOG.md) for progress.
+Each file is a standard Claude Code agent with YAML frontmatter. Commit them to your repo and everyone on the team uses the same personas.
 
 ## License
 
-TBD
+[MIT](LICENSE)
