@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>teambuilder</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #e8e8e8;
+      --muted: #888;
+      --accent: #7c6af7;
+      --code-bg: #141414;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 80px 24px 64px;
+    }
+
+    header {
+      margin-bottom: 56px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    h2 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    section {
+      margin-bottom: 48px;
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .personas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .persona {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+    }
+
+    .persona-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 2px;
+    }
+
+    .persona-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .install-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .install-label {
+      padding: 8px 14px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .install-cmd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      gap: 12px;
+    }
+
+    .install-cmd code {
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 0.82rem;
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    .copy-btn {
+      flex-shrink: 0;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .copy-btn:hover {
+      color: var(--text);
+      border-color: #444;
+    }
+
+    .copy-btn.copied {
+      color: #6bcb77;
+      border-color: #6bcb77;
+    }
+
+    .note {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .commands {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 14px;
+    }
+
+    .commands code {
+      display: block;
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 0.82rem;
+      line-height: 2;
+      color: var(--text);
+    }
+
+    .commands code .cmd { color: var(--accent); }
+    .commands code .comment { color: var(--muted); }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--text);
+    }
+
+    @media (max-width: 480px) {
+      .personas { grid-template-columns: 1fr; }
+      h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>team<span>builder</span></h1>
+      <p class="tagline">Build a team of expert AI personas for your Claude Code project.</p>
+    </header>
+
+    <section>
+      <h2>What it does</h2>
+      <p>Teambuilder guides you through creating opinionated, project-aware agent personas — each with a distinct role, expertise, and perspective. Answer a few questions per persona and get a self-contained system prompt file, ready to use.</p>
+    </section>
+
+    <section>
+      <h2>The team</h2>
+      <div class="personas">
+        <div class="persona">
+          <div class="persona-name">/teambuild:analyst</div>
+          <div class="persona-desc">Requirements &amp; problem space</div>
+        </div>
+        <div class="persona">
+          <div class="persona-name">/teambuild:architect</div>
+          <div class="persona-desc">System design &amp; tech decisions</div>
+        </div>
+        <div class="persona">
+          <div class="persona-name">/teambuild:designer</div>
+          <div class="persona-desc">UX/UI &amp; interaction design</div>
+        </div>
+        <div class="persona">
+          <div class="persona-name">/teambuild:programmer</div>
+          <div class="persona-desc">Implementation &amp; conventions</div>
+        </div>
+        <div class="persona">
+          <div class="persona-name">/teambuild:tester</div>
+          <div class="persona-desc">Quality &amp; verification</div>
+        </div>
+        <div class="persona">
+          <div class="persona-name">/teambuild:reviewer</div>
+          <div class="persona-desc">Code review &amp; quality gates</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Install</h2>
+      <div class="install-block">
+        <div class="install-label">macOS / Linux</div>
+        <div class="install-cmd">
+          <code id="cmd-sh">curl -fsSL https://daemonicai.github.io/teambuild/install.sh | bash</code>
+          <button class="copy-btn" onclick="copy('cmd-sh', this)">Copy</button>
+        </div>
+      </div>
+      <div class="install-block">
+        <div class="install-label">Windows</div>
+        <div class="install-cmd">
+          <code id="cmd-ps">irm https://daemonicai.github.io/teambuild/install.ps1 | iex</code>
+          <button class="copy-btn" onclick="copy('cmd-ps', this)">Copy</button>
+        </div>
+      </div>
+      <p class="note">Re-running the install script updates an existing installation.</p>
+    </section>
+
+    <section>
+      <h2>Usage</h2>
+      <div class="commands">
+        <code><span class="comment"># Set up project context first</span></code>
+        <code><span class="cmd">/teambuild:init</span></code>
+        <code>&nbsp;</code>
+        <code><span class="comment"># Build personas in order — each reads the previous</span></code>
+        <code><span class="cmd">/teambuild:analyst</span></code>
+        <code><span class="cmd">/teambuild:architect</span></code>
+        <code><span class="cmd">/teambuild:designer</span></code>
+        <code><span class="cmd">/teambuild:programmer</span></code>
+        <code><span class="cmd">/teambuild:tester</span></code>
+        <code><span class="cmd">/teambuild:reviewer</span></code>
+        <code>&nbsp;</code>
+        <code><span class="comment"># Variants for multi-platform projects</span></code>
+        <code><span class="cmd">/teambuild:programmer ios</span></code>
+        <code><span class="cmd">/teambuild:programmer api</span></code>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="https://github.com/daemonicai/teambuild">GitHub</a>
+  </footer>
+
+  <script>
+    function copy(id, btn) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
