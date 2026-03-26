@@ -28,7 +28,7 @@ Ask the following questions **one at a time**, waiting for each answer. If you h
 3. **Who are the end users?** (types of people using the product, approximate scale, any notable characteristics)
 4. **What kind of application is this?** — use `ask_followup_question` with follow_up_suggestions: `Web app`, `Mobile app`, `API / backend service`, `Desktop app`, `Game`, `Embedded system`, `CLI tool`, `Other`
 5. **Are there any known constraints?** (regulatory requirements, compliance, budget, timeline, existing tech commitments — or "none")
-6. **What domain expertise should the Analyst have?** (what does an expert in this field deeply understand? e.g., for fintech: payment rails, regulatory reporting, fraud patterns)
+6. **What domain expertise should the Analyst have?** — Before asking, synthesize what you've learned from Q1–Q5 (the project description, users, application type, and constraints) and propose 4–6 specific domain expertise areas the Analyst should have. Present them as: "Based on what you've told me, here's what I think the Analyst should deeply understand: [list]. Does this sound right? Anything to add, remove, or change?" Then use `ask_followup_question` with follow_up_suggestions: `Looks good`, `I want to make changes`
 7. **Are there existing documents or requirements to work from?** (links, file paths, or descriptions — or "none")
 8. **What format do you prefer for requirements?** — use `ask_followup_question` with follow_up_suggestions: `User stories`, `Use cases`, `Jobs-to-be-done`, `Freeform prose`, `Mix of formats`
 9. **What communication style do you want from the Analyst?** — use `ask_followup_question` with follow_up_suggestions: `Socratic — asks probing questions`, `Direct — gives structured answers`, `Structured — always uses headers and lists`
@@ -127,11 +127,10 @@ If `_team.md` currently contains `*No personas created yet.*`, replace that line
 
 ## Step 6: Confirm
 
-Tell the user:
+Tell the user the Analyst persona has been saved to `.claude/agents/analyst.md`.
 
-> Analyst persona saved to `.claude/agents/analyst.md`.
->
-> Next: run `/teambuild:architect` to build your Architect persona, or use your Analyst now with:
-> ```
-> claude --system-prompt-file .claude/agents/analyst.md
-> ```
+Then use `ask_followup_question` with follow_up_suggestions: `Start a requirements session now`, `Build the Architect persona next`, `I'm done for now`
+
+- If **Start a requirements session now**: invoke the `analyst` sub-agent (from `.claude/agents/analyst.md`). Act as orchestrator — relay the analyst's questions to the user and pass answers back. The user is now in a live requirements gathering session.
+- If **Build the Architect persona next**: proceed directly as if the user has run `/teambuild:architect`.
+- If **I'm done for now**: let the user know they can start a session anytime by saying "use the analyst" or run `claude --system-prompt-file .claude/agents/analyst.md` for a standalone session.

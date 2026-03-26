@@ -151,11 +151,10 @@ System design and technology decision-maker. Deployment: [deployment from Q2]. A
 
 ## Step 6: Confirm
 
-Tell the user:
+Tell the user the Architect persona has been saved to `.claude/agents/architect.md`.
 
-> Architect persona saved to `.claude/agents/architect.md`.
->
-> Next: run `/teambuild:designer` to build your Designer persona, or use your Architect now with:
-> ```
-> claude --system-prompt-file .claude/agents/architect.md
-> ```
+Then use `ask_followup_question` with follow_up_suggestions: `Start an architecture session now`, `Build the Designer persona next`, `I'm done for now`
+
+- If **Start an architecture session now**: invoke the `architect` sub-agent (from `.claude/agents/architect.md`). Act as orchestrator — relay the architect's questions and outputs to the user and pass responses back.
+- If **Build the Designer persona next**: proceed directly as if the user has run `/teambuild:designer`.
+- If **I'm done for now**: let the user know they can start a session anytime by saying "use the architect" or run `claude --system-prompt-file .claude/agents/architect.md` for a standalone session.

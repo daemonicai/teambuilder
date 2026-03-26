@@ -183,13 +183,9 @@ Conformance and quality gate expert. Workflow: [workflow from Q1]. Blocking issu
 
 ## Step 6: Confirm
 
-Tell the user:
+Tell the user the Reviewer persona has been saved to `.claude/agents/reviewer.md` and their team is complete.
 
-> Reviewer persona saved to `.claude/agents/reviewer.md`.
->
-> Your team is complete! Use any persona with:
-> ```
-> claude --system-prompt-file .claude/agents/<persona>.md
-> ```
->
-> Personas are committed to your repo — your whole team uses the same agents.
+Then use `ask_followup_question` with follow_up_suggestions: `Start a review session now`, `I'm done for now`
+
+- If **Start a review session now**: invoke the `reviewer` sub-agent (from `.claude/agents/reviewer.md`). Act as orchestrator — relay the reviewer's questions and outputs to the user and pass responses back.
+- If **I'm done for now**: let the user know they can invoke any persona at any time by saying "use the [persona name]", or run it standalone with `claude --system-prompt-file .claude/agents/<persona>.md`. Remind them that all persona files are in `.claude/agents/` and can be committed to the repo so the whole team uses the same agents.

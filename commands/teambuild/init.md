@@ -49,8 +49,8 @@ Write `.claude/agents/_team.md` with this content:
 
 ## Step 6: Confirm and prompt
 
-Tell the user:
+Tell the user that project context has been saved to `.claude/agents/` and their team roster is ready.
 
-> Project context saved to `.claude/agents/`. Your team roster is ready.
->
-> Next step: run `/teambuild:analyst` to build your first persona.
+Then use `ask_followup_question` with follow_up_suggestions: `Build the Analyst persona now`, `I'll do it later`
+
+- If **Build now**: proceed directly as if the user has run `/teambuild:analyst` — do not ask them to run it manually.

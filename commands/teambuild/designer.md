@@ -145,11 +145,10 @@ UX/UI expert. Design system: [design system from Q2]. Accessibility: [WCAG level
 
 ## Step 6: Confirm
 
-Tell the user:
+Tell the user the Designer persona has been saved to `.claude/agents/designer.md`.
 
-> Designer persona saved to `.claude/agents/designer.md`.
->
-> Next: run `/teambuild:programmer` to build your Programmer persona, or use your Designer now with:
-> ```
-> claude --system-prompt-file .claude/agents/designer.md
-> ```
+Then use `ask_followup_question` with follow_up_suggestions: `Start a design session now`, `Build the Programmer persona next`, `I'm done for now`
+
+- If **Start a design session now**: invoke the `designer` sub-agent (from `.claude/agents/designer.md`). Act as orchestrator — relay the designer's questions and outputs to the user and pass responses back.
+- If **Build the Programmer persona next**: proceed directly as if the user has run `/teambuild:programmer`.
+- If **I'm done for now**: let the user know they can start a session anytime by saying "use the designer" or run `claude --system-prompt-file .claude/agents/designer.md` for a standalone session.
