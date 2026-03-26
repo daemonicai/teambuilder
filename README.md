@@ -10,6 +10,24 @@ Different tasks benefit from different expert perspectives. A requirements conve
 
 Teambuilder gives you opinionated, project-aware personas through a guided creation flow that asks the right questions for each role.
 
+## Install
+
+### macOS / Linux
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/rendle/teambuilder/release/install.sh | bash
+```
+
+Re-running updates an existing installation.
+
+### Windows
+
+```powershell
+irm https://raw.githubusercontent.com/rendle/teambuilder/release/install.ps1 | iex
+```
+
+---
+
 ## How it works
 
 ### 1. Initialize your project
