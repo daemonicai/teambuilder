@@ -9,7 +9,7 @@ Teambuilder is a set of Claude Code skills that guide you through creating speci
 ### macOS / Linux
 
 ```bash
-curl -fsSL https://daemonicai.github.io/teambuild/install.sh | bash
+curl -fsSL https://daemonicai.github.io/teambuilder/install.sh | bash
 ```
 
 Re-running updates an existing installation.
@@ -17,7 +17,7 @@ Re-running updates an existing installation.
 ### Windows
 
 ```powershell
-irm https://daemonicai.github.io/teambuild/install.ps1 | iex
+irm https://daemonicai.github.io/teambuilder/install.ps1 | iex
 ```
 
 ---

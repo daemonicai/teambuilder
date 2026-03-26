@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-$RepoUrl = "https://github.com/daemonicai/teambuild.git"
+$RepoUrl = "https://github.com/daemonicai/teambuilder.git"
 $InstallDir = Join-Path $HOME ".claude\teambuilder"
 $CommandsSrc = Join-Path $InstallDir "commands\teambuild"
 $CommandsDst = Join-Path $HOME ".claude\commands\teambuild"
