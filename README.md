@@ -15,7 +15,7 @@ Teambuilder gives you opinionated, project-aware personas through a guided creat
 ### macOS / Linux
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/rendle/teambuilder/release/install.sh | bash
+curl -fsSL https://daemonic.github.io/teambuilder/install.sh | bash
 ```
 
 Re-running updates an existing installation.
@@ -23,7 +23,7 @@ Re-running updates an existing installation.
 ### Windows
 
 ```powershell
-irm https://raw.githubusercontent.com/rendle/teambuilder/release/install.ps1 | iex
+irm https://daemonic.github.io/teambuilder/install.ps1 | iex
 ```
 
 ---
