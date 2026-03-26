@@ -25,7 +25,7 @@ From `programmer.md` (if present): note the testing approach and any testability
 
 Check whether `.claude/agents/tester.md` already exists.
 
-- If it exists: tell the user a Tester persona already exists, and ask: **update it or start fresh?**
+- If it exists: tell the user a Tester persona already exists, then use `ask_followup_question` with follow_up_suggestions: `Update it`, `Start fresh`
   - **Update:** read `teambuilder.answers` from the existing file's YAML frontmatter — use these as pre-filled defaults
   - **Start fresh:** ignore the existing file, no defaults
 - If it doesn't exist: proceed with no defaults
@@ -34,43 +34,43 @@ Check whether `.claude/agents/tester.md` already exists.
 
 Ask the following questions **one at a time**. Show pre-filled defaults in the update flow.
 
-1. **Which test types do you want?** (select all that apply — list them and ask the user to confirm)
+1. **Which test types do you want?** Present each type as a yes/no — use `ask_followup_question` with follow_up_suggestions for each: `Yes`, `No`. Work through this list:
    - Integration tests
    - End-to-end (e2e) tests
    - Frontend component tests
    - Visual regression tests
    - Accessibility audits
-   - Performance/load tests
+   - Performance / load tests
    - Contract tests (API consumer/provider)
-   - Security/penetration tests
+   - Security / penetration tests
 
 2. **What environments exist, and which does the test suite run against?** (e.g., dev, staging, prod — and which are targeted for each test type)
 
-3. **What is your CI/CD pipeline?** (GitHub Actions, GitLab CI, Jenkins, etc. — and what triggers test runs: PR, merge to main, scheduled, all of the above)
+3. **What is your CI/CD pipeline?** (GitHub Actions, GitLab CI, Jenkins, etc.) Then: "What triggers test runs?" — use `ask_followup_question` with follow_up_suggestions: `On every PR`, `On merge to main`, `Scheduled`, `All of the above`, `Other`
 
-4. **Real services vs. mocks at integration boundaries — where do you draw the line?** (e.g., "mock external payment APIs, use real database in staging", or "mock everything in unit/integration, use real services in e2e only")
+4. **Real services vs. mocks at integration boundaries — where do you draw the line?** (e.g., "mock external payment APIs, use real database in staging")
 
-5. **Test data strategy?** (fixtures / static seed files; factories / generated per-test; seeded database reset per run; externally managed test data — or a mix)
+5. **Test data strategy?** — use `ask_followup_question` with follow_up_suggestions: `Fixtures / static seed files`, `Factories — generated per test`, `Seeded database reset per run`, `Externally managed test data`, `Mix`
 
-6. **What is the quality gate?** (what must pass before a feature is considered done — e.g., "all integration tests pass, e2e on critical paths pass, no accessibility regressions")
+6. **What is the quality gate?** (what must pass before a feature is considered done)
 
-7. **Flaky test tolerance?** (zero tolerance — flaky tests must be fixed or deleted; pragmatic — allow retry strategy for known-flaky tests with tracking)
+7. **Flaky test tolerance?** — use `ask_followup_question` with follow_up_suggestions: `Zero tolerance — flaky tests must be fixed or deleted`, `Pragmatic — allow retry strategy with tracking`
 
 **Drill-down by selected test type** (ask these only for types selected in Q1):
 
-- **Integration:** What is the scope? (service-to-service, DB layer, external APIs, all of the above) What is the isolation strategy for external dependencies?
-- **E2e:** What browser/device targets? What are the critical user journeys that must always be covered? Headless or headed in CI?
-- **Frontend component:** Which framework? (React Testing Library, Vue Test Utils, Storybook interaction tests, etc.) How deep — render + assert props only, or full interaction simulation?
-- **Visual regression:** Which tooling? (Chromatic, Percy, Playwright screenshots, etc.) What's the baseline update strategy? What constitutes a failure?
-- **Accessibility:** WCAG level (confirm with Designer if present). Automated CI checks vs. manual audit cadence — how often?
-- **Performance/load:** Which tools? (k6, Locust, Artillery, etc.) What are the baseline metrics and SLOs? What triggers a failure?
+- **Integration:** What is the scope? — use `ask_followup_question` with follow_up_suggestions: `Service-to-service`, `DB layer`, `External APIs`, `All of the above`. Then: isolation strategy for external dependencies?
+- **E2e:** Browser/device targets? Critical user journeys to always cover? — use `ask_followup_question` with follow_up_suggestions: `Headless in CI`, `Headed in CI`, `Both`
+- **Frontend component:** Framework? (React Testing Library, Vue Test Utils, Storybook, etc.) — use `ask_followup_question` with follow_up_suggestions: `Render + assert props only`, `Full interaction simulation`
+- **Visual regression:** Tooling? (Chromatic, Percy, Playwright screenshots) Baseline update strategy? What counts as a failure?
+- **Accessibility:** WCAG level (confirm with Designer if present) — use `ask_followup_question` with follow_up_suggestions: `Automated CI checks only`, `Manual audit cadence`, `Both`
+- **Performance/load:** Tools? (k6, Locust, Artillery) Baseline metrics and SLOs? What triggers a failure?
 - **Contract:** Provider/consumer setup — which services are consumers, which are providers? Schema registry in use?
-- **Security:** Which tools? (OWASP ZAP, Snyk, Trivy, etc.) What is the scope (SAST, DAST, dependency scanning)? Runs in CI or on schedule?
+- **Security:** Tools? (OWASP ZAP, Snyk, Trivy) Scope? — use `ask_followup_question` with follow_up_suggestions: `SAST`, `DAST`, `Dependency scanning`, `All`. Runs in CI or on schedule?
 
 **Persona configuration:**
 
-8. **How opinionated about test architecture?** (prescriptive — defines patterns and enforces them; adaptive — works within existing approaches and suggests improvements)
-9. **Documentation style for test plans and coverage reports?** (formal test plans with pass/fail criteria; living documentation in code comments; lightweight coverage summaries only)
+8. **How opinionated about test architecture?** — use `ask_followup_question` with follow_up_suggestions: `Prescriptive — defines patterns and enforces them`, `Adaptive — works within existing approaches`
+9. **Documentation style for test plans and coverage reports?** — use `ask_followup_question` with follow_up_suggestions: `Formal test plans with pass/fail criteria`, `Living documentation in code comments`, `Lightweight coverage summaries only`
 
 ## Step 4: Write `tester.md`
 

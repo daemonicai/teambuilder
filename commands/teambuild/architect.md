@@ -21,7 +21,7 @@ If `analyst.md` exists, extract relevant information: application type, constrai
 
 Check whether `.claude/agents/architect.md` already exists.
 
-- If it exists: tell the user an Architect persona already exists, and ask: **update it or start fresh?**
+- If it exists: tell the user an Architect persona already exists, then use `ask_followup_question` with follow_up_suggestions: `Update it`, `Start fresh`
   - **Update:** read `teambuilder.answers` from the existing file's YAML frontmatter — use these as pre-filled defaults
   - **Start fresh:** ignore the existing file, no defaults
 - If it doesn't exist: proceed with no defaults
@@ -33,26 +33,26 @@ Ask the following questions **one at a time**. Show pre-filled defaults in the u
 **Always ask:**
 
 1. **What are the scale expectations?** (approximate number of users, data volume, expected growth over the next 1-2 years)
-2. **What is the deployment environment?** (cloud — which provider; on-prem; edge; hybrid; or unknown/TBD)
+2. **What is the deployment environment?** — use `ask_followup_question` with follow_up_suggestions: `Cloud (specify provider in follow-up)`, `On-premises`, `Edge`, `Hybrid`, `Unknown / TBD`
 3. **What are the integration points?** (existing systems, third-party APIs, databases, or services this project must connect to — or "none")
 4. **Rank these non-functional priorities** from most to least important: performance, availability, security, cost
 5. **Are there hard technical constraints?** (must use a specific technology, language, or platform due to contracts, existing infrastructure, or regulatory requirements — or "none")
-6. **Are there technologies to explicitly avoid?** (and why, if so)
-7. **How cost-sensitive is infrastructure?** (optimize aggressively for cost / balance cost and capability / cost is not a constraint)
+6. **Are there technologies to explicitly avoid?** (and why, if so — or "none")
+7. **How cost-sensitive is infrastructure?** — use `ask_followup_question` with follow_up_suggestions: `Optimize aggressively for cost`, `Balance cost and capability`, `Cost is not a constraint`
 
 **Adaptive — ask these based on what you found in `analyst.md` or based on answers above:**
 
-- If real-time needs are evident (chat, notifications, live data): "Do you have preferences for event-driven or messaging architecture? (e.g., WebSockets, SSE, message queues, pub/sub)"
-- If multi-platform is in scope: "For cross-platform, do you lean toward native-per-platform or a shared codebase approach?"
-- If data-heavy: "What are your data storage and processing needs? (relational DB, document store, data warehouse, streaming pipeline)"
-- If user-facing API: "What is your API design philosophy? (REST, GraphQL, RPC/gRPC, or context-dependent)"
-- If regulated domain: "Are there compliance architecture requirements? (e.g., data residency, audit logging, encryption at rest/in transit mandates)"
+- If real-time needs are evident (chat, notifications, live data): "Do you have preferences for event-driven or messaging architecture?" — use `ask_followup_question` with follow_up_suggestions: `WebSockets / SSE`, `Message queue (e.g. RabbitMQ, SQS)`, `Pub/sub (e.g. Kafka, Pub/Sub)`, `No preference`
+- If multi-platform is in scope: "For cross-platform, do you lean toward:" — use `ask_followup_question` with follow_up_suggestions: `Native per platform`, `Shared codebase (e.g. React Native, Flutter)`, `No preference`
+- If data-heavy: "What are your primary data storage needs?" — use `ask_followup_question` with follow_up_suggestions: `Relational database`, `Document store`, `Data warehouse`, `Streaming pipeline`, `Mix — describe in follow-up`
+- If user-facing API: "What is your API design philosophy?" — use `ask_followup_question` with follow_up_suggestions: `REST`, `GraphQL`, `RPC / gRPC`, `Context-dependent`
+- If regulated domain: "Are there compliance architecture requirements? (e.g., data residency, audit logging, encryption mandates — or 'none')"
 
 **Architect persona configuration:**
 
-8. **Documentation style?** (C4 diagrams, Architecture Decision Records (ADRs), informal written descriptions, or a mix)
-9. **Decision approach?** (opinionated and decisive — makes a recommendation and defends it; or balanced — presents options with trade-offs and lets you choose)
-10. **How opinionated about patterns and conventions?** (strict — flags any deviation; pragmatic — contextual judgment)
+8. **Documentation style?** — use `ask_followup_question` with follow_up_suggestions: `C4 diagrams`, `Architecture Decision Records (ADRs)`, `Informal written descriptions`, `Mix`
+9. **Decision approach?** — use `ask_followup_question` with follow_up_suggestions: `Opinionated — makes a recommendation and defends it`, `Balanced — presents options with trade-offs`
+10. **Convention strictness?** — use `ask_followup_question` with follow_up_suggestions: `Strict — flags any deviation`, `Pragmatic — contextual judgment`
 
 ## Step 4: Write `architect.md`
 
