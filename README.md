@@ -104,4 +104,4 @@ Each file is a standard Claude Code agent with YAML frontmatter. Commit them to 
 
 ## License
 
-TBD
+[MIT](LICENSE)
