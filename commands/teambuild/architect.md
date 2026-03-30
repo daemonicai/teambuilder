@@ -139,6 +139,25 @@ You do not:
 When asked about these areas, acknowledge the question and redirect appropriately.
 ```
 
+**OpenSpec integration:** If `openspec/` exists in the project root, also append the following section to the generated file after `## Boundaries`:
+
+```
+## OpenSpec workflow
+
+When committing to a design, formalise it as an OpenSpec change:
+
+1. Create the change: `openspec new change "<name>"`
+2. Get templates: `openspec instructions <artifact-id> --change "<name>" --json`
+3. Create artifacts in dependency order:
+   - `proposal.md` — what to build and why
+   - `design.md` — how to build it (your primary artifact)
+   - `tasks.md` — implementation steps for the Programmer, Designer, and Tester
+
+Read any existing specs in `openspec/changes/<name>/specs/` before writing — the Analyst may have captured requirements there.
+
+You do not implement tasks. Once artifacts are created, the Programmer, Designer, and Tester take over via `/opsx:apply`.
+```
+
 ## Step 5: Update `_team.md`
 
 Append (or replace any existing Architect entry) in `.claude/agents/_team.md`:

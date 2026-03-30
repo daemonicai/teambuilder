@@ -71,6 +71,34 @@ Re-run any skill at any time. Teambuilder detects the existing persona and asks 
 
 ---
 
+## OpenSpec integration
+
+If your project uses [OpenSpec](https://openspec.dev/), Teambuilder connects to it automatically.
+
+**`/teambuild:init`** writes a routing block to your `CLAUDE.md` that tells Claude which persona to use for each OpenSpec command. No manual configuration needed, and it works whether you install OpenSpec before or after Teambuilder.
+
+**Personas are OpenSpec-aware.** When your project has an `openspec/` directory, each persona is generated with knowledge of the workflow:
+
+| Persona | OpenSpec role |
+|---------|---------------|
+| **Analyst** | Explores in the OpenSpec explore stance; captures requirements as specs in `openspec/changes/<name>/specs/` using When/Then format |
+| **Architect** | Creates changes with `openspec new change`; produces `proposal.md`, `design.md`, and `tasks.md` using `openspec instructions` for templates |
+| **Designer** | Works through design tasks in `tasks.md`; marks each complete as it goes |
+| **Programmer** | Works through coding tasks in `tasks.md`; marks each complete as it goes |
+| **Tester** | Works through testing tasks in `tasks.md`; marks each complete as it goes |
+
+**OpenSpec commands use your personas** (via the `CLAUDE.md` routing block):
+
+| OpenSpec command | Persona used |
+|------------------|--------------|
+| `/opsx:explore` | Analyst |
+| `/opsx:propose` | Architect |
+| `/opsx:apply` | Designer, Programmer, or Tester — inferred from pending task type |
+
+Personas that don't exist yet are skipped gracefully — the integration activates incrementally as you build your team.
+
+---
+
 ## The team
 
 | Persona | Focus | Deliberately ignores |

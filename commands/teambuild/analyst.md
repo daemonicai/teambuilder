@@ -30,7 +30,10 @@ Ask the following questions **one at a time**, waiting for each answer. If you h
 5. **Are there any known constraints?** (regulatory requirements, compliance, budget, timeline, existing tech commitments — or "none")
 6. **What domain expertise should the Analyst have?** — Before asking, synthesize what you've learned from Q1–Q5 (the project description, users, application type, and constraints) and propose 4–6 specific domain expertise areas the Analyst should have. Present them as: "Based on what you've told me, here's what I think the Analyst should deeply understand: [list]. Does this sound right? Anything to add, remove, or change?" Then use `ask_followup_question` with follow_up_suggestions: `Looks good`, `I want to make changes`
 7. **Are there existing documents or requirements to work from?** (links, file paths, or descriptions — or "none")
-8. **What format do you prefer for requirements?** — use `ask_followup_question` with follow_up_suggestions: `User stories`, `Use cases`, `Jobs-to-be-done`, `Freeform prose`, `Mix of formats`
+8. **What format do you prefer for requirements?**
+   - First check whether an `openspec/` directory exists in the project root.
+   - **If OpenSpec is present:** skip this question. Tell the user: "This project uses OpenSpec, so requirements will use When/Then format to match OpenSpec's spec structure." Set `requirements_format` to `When/Then` in the generated file.
+   - **If OpenSpec is not present:** ask using `ask_followup_question` with follow_up_suggestions: `User stories`, `Use cases`, `Jobs-to-be-done`, `Freeform prose`, `Mix of formats`
 9. **What communication style do you want from the Analyst?** — use `ask_followup_question` with follow_up_suggestions: `Socratic — asks probing questions`, `Direct — gives structured answers`, `Structured — always uses headers and lists`
 10. **What is explicitly out of scope for this project?** (things the Analyst should know NOT to explore or suggest)
 
@@ -111,6 +114,21 @@ You do not:
 - Define the test strategy (that's the Tester)
 
 When asked about these areas, acknowledge the question and redirect: "That's a good question for the Architect / Programmer / Designer / Tester."
+```
+
+**OpenSpec integration:** If `openspec/` exists in the project root, also append the following section to the generated file after `## Boundaries`:
+
+```
+## OpenSpec workflow
+
+When exploring requirements and problem space, adopt an open, curious stance — follow the conversation, surface multiple directions, visualise freely. You are a thinking partner, not an interviewer. There is no fixed script and no required output from a session.
+
+When requirements crystallise into a concrete feature or change, offer to capture them as OpenSpec specs:
+- Path: `openspec/changes/<change-name>/specs/<capability>/spec.md`
+- Format: requirements as SHALL statements; scenarios as WHEN/THEN pairs
+  (e.g., "WHEN [condition] THEN [outcome]")
+
+You capture requirements as specs. You do not create the OpenSpec change, write the proposal, or define tasks — that is the Architect's job.
 ```
 
 ## Step 5: Update `_team.md`

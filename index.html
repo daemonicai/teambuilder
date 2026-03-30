@@ -159,6 +159,29 @@
       margin-top: 4px;
     }
 
+    .routing {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .route {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 0.82rem;
+    }
+
+    .route-cmd { color: var(--accent); flex-shrink: 0; }
+    .route-arrow { color: var(--muted); flex-shrink: 0; }
+    .route-persona { color: var(--text); }
+
     .commands {
       background: var(--code-bg);
       border: 1px solid var(--border);
@@ -259,6 +282,30 @@
         </div>
       </div>
       <p class="note">Re-running the install script updates an existing installation.</p>
+    </section>
+
+    <section>
+      <h2>OpenSpec integration</h2>
+      <p>If your project uses <a href="https://openspec.dev/" style="color:var(--accent);text-decoration:none">OpenSpec</a>, Teambuilder connects to it automatically. <code style="font-family:monospace;font-size:0.85em">/teambuild:init</code> writes a routing block to your <code style="font-family:monospace;font-size:0.85em">CLAUDE.md</code> so Claude knows which persona to use for each OpenSpec command.</p>
+      <p>Personas generated with an <code style="font-family:monospace;font-size:0.85em">openspec/</code> directory present are workflow-aware: the Analyst captures requirements as specs, the Architect creates changes and artifacts, and the rest work through tasks and mark them complete.</p>
+      <div class="routing">
+        <div class="route">
+          <span class="route-cmd">/opsx:explore</span>
+          <span class="route-arrow">→</span>
+          <span class="route-persona">analyst</span>
+        </div>
+        <div class="route">
+          <span class="route-cmd">/opsx:propose</span>
+          <span class="route-arrow">→</span>
+          <span class="route-persona">architect</span>
+        </div>
+        <div class="route">
+          <span class="route-cmd">/opsx:apply</span>
+          <span class="route-arrow">→</span>
+          <span class="route-persona">designer · programmer · tester</span>
+        </div>
+      </div>
+      <p class="note">Personas that don't exist yet are skipped gracefully. Install OpenSpec before or after Teambuilder — the integration activates on the next <code style="font-family:monospace">/teambuild:init</code>.</p>
     </section>
 
     <section>
