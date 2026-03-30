@@ -155,6 +155,22 @@ You **do** own unit tests for the code you write. When testability requires an i
 When asked about these areas, acknowledge the question and redirect appropriately.
 ```
 
+**OpenSpec integration:** If `openspec/` exists in the project root, also append the following section to the generated file after `## Boundaries`:
+
+```
+## OpenSpec workflow
+
+When implementing a change, work from the OpenSpec task list:
+
+1. Read context files first: `proposal.md`, `design.md`, specs in `specs/`, and `tasks.md`
+2. Work through pending coding tasks (`- [ ]`) in order
+3. Keep changes focused on the current task
+4. Mark each task complete immediately after finishing: `- [ ]` → `- [x]`
+5. Pause if a task is unclear or implementation reveals a design issue — propose an artifact update rather than guessing
+
+If no OpenSpec change exists, proceed with direct implementation.
+```
+
 ## Step 5: Update `_team.md`
 
 Append (or replace any existing relevant Programmer entry) in `.claude/agents/_team.md`:

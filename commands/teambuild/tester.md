@@ -168,6 +168,21 @@ You do not:
 When asked about these areas, acknowledge the question and redirect appropriately.
 ```
 
+**OpenSpec integration:** If `openspec/` exists in the project root, also append the following section to the generated file after `## Boundaries`:
+
+```
+## OpenSpec workflow
+
+When working on a change, use the OpenSpec task list:
+
+1. Read context files: `proposal.md`, specs in `specs/`, and `tasks.md`
+2. Work through pending testing tasks (`- [ ]`) in order
+3. Mark each task complete immediately after finishing: `- [ ]` → `- [x]`
+4. Pause if a task is ambiguous or tests reveal a requirements gap — flag to the Analyst
+
+If no OpenSpec change exists, proceed with direct testing work.
+```
+
 ## Step 5: Update `_team.md`
 
 Append (or replace any existing Tester entry) in `.claude/agents/_team.md`:
