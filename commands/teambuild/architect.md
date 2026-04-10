@@ -11,11 +11,16 @@ The Architect persona you create will be used as a Claude sub-agent — a system
 Read the following files if they exist:
 - `.claude/agents/_project.md`
 - `.claude/agents/_team.md`
+- `.claude/agents/_stack.md`
 - `.claude/agents/analyst.md`
 
 If `_project.md` does not exist, tell the user to run `/teambuild:init` first, then stop.
 
+If `_stack.md` exists, note the languages, frameworks, and structure (e.g., monorepo layout, separate frontend/backend roots). You will use this to inform your questions about deployment, integration points, and constraints — and to skip redundant questions where the stack is already clear.
+
 If `analyst.md` exists, extract relevant information: application type, constraints, scale hints, regulated domains, and multi-platform needs. You will use this to ask smarter, adaptive questions below.
+
+**Discrepancy check:** After reading `_stack.md` (if present), check whether what you can observe in the project structure (manifest files, directory layout) matches what `_stack.md` records. If you notice a meaningful discrepancy (e.g., `_stack.md` names a framework that is no longer in the manifests), note it to the user: "_stack.md records [X], but I see [Y] in the current project — this may have changed since init ran. Would you like me to update _stack.md?" and use `ask_followup_question` with follow_up_suggestions: `Yes, update it`, `No, leave it`. If the user says yes, update `_stack.md` with the corrected information.
 
 ## Step 2: Check for existing architect persona
 
@@ -102,6 +107,10 @@ Choose the best technology for the requirements, not the most familiar. Assume A
 ## Team
 
 [Paste the full content of `_team.md` here]
+
+## Codebase context
+
+[If `_stack.md` exists, paste its full content here. Otherwise omit this section.]
 
 ## Technical context
 

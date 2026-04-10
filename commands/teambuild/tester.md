@@ -11,11 +11,17 @@ The Tester persona you create will be used as a Claude sub-agent — a quality a
 Read the following files if they exist:
 - `.claude/agents/_project.md`
 - `.claude/agents/_team.md`
+- `.claude/agents/_stack.md`
+- `.claude/agents/_testing.md`
 - `.claude/agents/analyst.md`
 - `.claude/agents/architect.md`
 - `.claude/agents/programmer.md`
 
 If `_project.md` does not exist, tell the user to run `/teambuild:init` first, then stop.
+
+From `_stack.md` (if present): note the languages, frameworks, and project structure. This tells you what testing frameworks are likely in play and what the codebase looks like.
+
+From `_testing.md` (if present): note the test types, frameworks, and CI pipeline already detected by init. Use this to pre-populate your understanding and ask more targeted questions — confirm or refine rather than starting from scratch.
 
 From `analyst.md` (if present): note the application type, user scale, and any compliance/regulatory constraints.
 From `architect.md` (if present): note the deployment environment, platform, CI/CD pipeline if mentioned.
@@ -71,6 +77,43 @@ Ask the following questions **one at a time**. Show pre-filled defaults in the u
 
 8. **How opinionated about test architecture?** — use `ask_followup_question` with follow_up_suggestions: `Prescriptive — defines patterns and enforces them`, `Adaptive — works within existing approaches`
 9. **Documentation style for test plans and coverage reports?** — use `ask_followup_question` with follow_up_suggestions: `Formal test plans with pass/fail criteria`, `Living documentation in code comments`, `Lightweight coverage summaries only`
+
+## Step 3b: Codebase investigation (existing repos only)
+
+If `_testing.md` exists, the project has an existing codebase with test infrastructure. Perform a targeted investigation to deepen what `_testing.md` records:
+
+1. **Read test files** — look at 3-5 test files across the detected test types. Look for: test naming conventions (`describe`/`it`/`test` patterns, file naming), how tests are structured (arrange/act/assert, given/when/then), how test data is set up (fixtures, factories, inline), and whether there are shared helpers or utilities.
+
+2. **Check CI pipeline details** — if a CI config was found (e.g., `.github/workflows/`), read it to understand: which test commands are run, in what order, whether there are separate jobs for different test types, and what the trigger conditions are.
+
+3. **Discrepancy check** — compare your findings against what `_testing.md` records. If you find meaningful discrepancies (e.g., `_testing.md` records Jest but you find Vitest config; a test directory exists that `_testing.md` doesn't mention), surface each one:
+
+   > "`_testing.md` records [X], but I found [Y] in the current codebase — this may have changed since init ran. Update `_testing.md`?"
+
+   Use `ask_followup_question` with follow_up_suggestions: `Yes, update it`, `No, leave it`. Respect the user's choice.
+
+If `_testing.md` does not exist (greenfield or pre-discovery), skip this step.
+
+## Step 3c: Update `_testing.md`
+
+**Variant support:** Check whether the user provided a variant argument (e.g., `/teambuild:tester unit`, `/teambuild:tester e2e`). If so, note it as VARIANT.
+
+After completing the question flow and investigation, update `.claude/agents/_testing.md` with your findings.
+
+**If no VARIANT argument was provided:**
+Write your findings as the body of `_testing.md` (replacing any existing content below the `# Testing` heading). Do not add a section header for yourself.
+
+**If a VARIANT argument was provided:**
+Add or replace a `## [Variant]` section (title-case the variant, e.g., `## Unit`, `## E2E`) in `_testing.md`. Leave any other `##` sections untouched.
+
+The content to write should cover:
+- Test types in scope and their frameworks
+- Test structure conventions observed in the code
+- Test data approach
+- CI pipeline details (commands, triggers, job structure)
+- Quality gate and flaky test policy
+
+If `_testing.md` does not exist yet, create it with `# Testing` as the heading.
 
 ## Step 4: Write `tester.md`
 
@@ -144,6 +187,10 @@ You are the Tester for [project name]. Your job is to own the test suite above u
 ## Team
 
 [Paste the full content of `_team.md` here]
+
+## Codebase test infrastructure
+
+[If `_testing.md` exists, paste the content of your section (## Variant if variant, or the full body if no variant) here. If `_testing.md` doesn't exist, omit this section.]
 
 ## Architecture context
 
