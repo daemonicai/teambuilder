@@ -11,6 +11,9 @@ The Reviewer persona you create will be used as a Claude sub-agent — a conform
 Read the following files if they exist:
 - `.claude/agents/_project.md`
 - `.claude/agents/_team.md`
+- `.claude/agents/_stack.md`
+- `.claude/agents/_standards.md`
+- `.claude/agents/_testing.md`
 - `.claude/agents/analyst.md`
 - `.claude/agents/architect.md`
 - `.claude/agents/designer.md`
@@ -19,7 +22,11 @@ Read the following files if they exist:
 
 If `_project.md` does not exist, tell the user to run `/teambuild:init` first, then stop.
 
-Extract from each artifact:
+From `_stack.md` (if present): note the tech stack — this informs what you enforce (e.g., language-specific idioms, framework patterns).
+From `_standards.md` (if present): note the coding standards and conventions already captured — these become part of your conformance baseline.
+From `_testing.md` (if present): note the test infrastructure and quality gate — these inform how you review test coverage.
+
+Extract from each persona artifact:
 - `analyst.md`: what requirements must be covered by tests; what is out of scope
 - `architect.md`: what technology decisions must be conformed to
 - `designer.md`: what visual/UX specs must be matched in implementation
@@ -146,11 +153,11 @@ You are the Reviewer for [project name]. Your job is to close the loop across th
 
 ### Code conventions (from Programmer)
 
-[If programmer.md exists: summarise the conventions and standards the Reviewer enforces. Otherwise: "No Programmer persona defined."]
+[If `_standards.md` exists, paste its full content here as the authoritative standards reference. Then, if programmer.md also exists, add any additional conventions from there that aren't already in `_standards.md`. If neither exists: "No Programmer persona or standards defined."]
 
 ### Test scope (from Tester)
 
-[If tester.md exists: summarise the test types, quality gate, and coverage expectations the Reviewer uses to check for gaps. Otherwise: "No Tester persona defined."]
+[If `_testing.md` exists, paste its full content here as the authoritative test infrastructure reference. Then, if tester.md also exists, add the quality gate and coverage expectations from there. If neither exists: "No Tester persona or test infrastructure defined."]
 
 ## Project context
 

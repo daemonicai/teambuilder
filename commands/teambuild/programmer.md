@@ -13,10 +13,16 @@ Check the argument the user passed (if any) and note it as `VARIANT` for the ste
 Read the following files if they exist:
 - `.claude/agents/_project.md`
 - `.claude/agents/_team.md`
+- `.claude/agents/_stack.md`
+- `.claude/agents/_standards.md`
 - `.claude/agents/analyst.md`
 - `.claude/agents/architect.md`
 
 If `_project.md` does not exist, tell the user to run `/teambuild:init` first, then stop.
+
+From `_stack.md` (if present): note the language(s), framework(s), and project structure. Use this to skip redundant questions — if the stack is already clear from `_stack.md` and `architect.md`, do not re-ask about it.
+
+From `_standards.md` (if present): note the standards tooling already detected (e.g., ESLint, Prettier, Ruff). Use this as context for the question flow — you can confirm or refine these rather than starting from scratch.
 
 From `architect.md` (if present): extract the technology choices — language, framework, and any relevant ecosystem decisions. You'll use these to ask ecosystem-specific questions.
 
@@ -65,6 +71,40 @@ Ask the following questions **one at a time**. In the variant flow, cross-cuttin
 
 8. **Convention strictness?** — use `ask_followup_question` with follow_up_suggestions: `Strict — flag any deviation`, `Pragmatic — flag only meaningful deviations`
 9. **Scope of suggestions?** — use `ask_followup_question` with follow_up_suggestions: `Focused — address only the immediate task`, `Proactive — suggest improvements to surrounding code when relevant`
+
+## Step 3b: Codebase investigation (existing repos only)
+
+If `_stack.md` exists, the project has an existing codebase. Perform a targeted investigation to deepen what `_standards.md` records:
+
+1. **Read representative source files** — look at 3-5 files in the primary language identified in `_stack.md`. Look for: naming conventions (files, functions, variables, types), module/package organisation patterns, import style, and any idioms that are consistently applied.
+
+2. **Check for patterns not captured by tooling** — linting config captures rules but not patterns. Note things like: how errors are returned/thrown, how modules are structured, whether the codebase uses a particular architectural pattern (e.g., repository pattern, service layer, functional core).
+
+3. **Discrepancy check** — compare your findings against what `_stack.md` and `_standards.md` record. If you find meaningful discrepancies (e.g., `_standards.md` shows Jest but `package.json` now shows Vitest; `_stack.md` names a framework that is no longer a dependency), surface each one:
+
+   > "`_stack.md` records [X], but I found [Y] in the current codebase — this may have changed since init ran. Update `_stack.md`?"
+
+   Use `ask_followup_question` with follow_up_suggestions: `Yes, update it`, `No, leave it`. Respect the user's choice.
+
+If `_stack.md` does not exist (greenfield or pre-discovery), skip this step.
+
+## Step 3c: Update `_standards.md`
+
+After completing the question flow and investigation, update `.claude/agents/_standards.md` with your findings.
+
+**If no VARIANT argument was provided:**
+Write your findings as the body of `_standards.md` (replacing any existing content below the `# Coding Standards` heading). Do not add a section header for yourself — write directly.
+
+**If a VARIANT argument was provided (e.g., `frontend`, `backend`):**
+Add or replace a `## [Variant]` section (title-case the variant, e.g., `## Frontend`) in `_standards.md`. Leave any other `##` sections untouched.
+
+The content to write should cover:
+- Confirmed language and framework
+- Key conventions observed in the code (naming, module structure, idioms)
+- Standards tooling in use (from init discovery + anything additional found)
+- Any patterns that are explicitly agreed (from the question flow)
+
+If `_standards.md` does not exist yet, create it with `# Coding Standards` as the heading.
 
 ## Step 4: Write the persona file
 
@@ -132,6 +172,10 @@ You work in **[language]** with **[framework]**. [Write 2-4 sentences about the 
 ## Team
 
 [Paste the full content of `_team.md` here]
+
+## Codebase standards
+
+[If `_standards.md` exists, paste the content of your section (## Variant if variant, or the full body if no variant) here. If `_standards.md` doesn't exist, omit this section.]
 
 ## Architecture context
 
