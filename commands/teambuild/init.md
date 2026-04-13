@@ -4,6 +4,17 @@ Set up teambuilder project context for the current project.
 
 You are running the `/teambuild:init` setup flow. Your job is to gather basic project context, discover the existing codebase (if applicable), and write shared context files to `.claude/agents/`.
 
+## Step 0: Check for OpenSpec
+
+Before doing anything else, verify that the `openspec` command-line tool is installed.
+
+Probe by running `openspec --version`. If the command is not found:
+
+- Stop immediately. Do not create any files.
+- Tell the user: "Teambuilder requires OpenSpec. Install it from https://openspec.dev and then re-run `/teambuild:init`."
+
+If the command is found, continue.
+
 ## Step 1: Check for existing context
 
 Check whether `.claude/agents/_project.md` already exists.
@@ -15,6 +26,13 @@ Check whether `.claude/agents/_project.md` already exists.
 ## Step 2: Create the agents directory
 
 Create `.claude/agents/` if it doesn't already exist.
+
+## Step 2b: Bootstrap the OpenSpec workspace
+
+Check whether an `openspec/` directory exists in the project root.
+
+- If it does **not** exist: run `openspec init` in the project root to create the workspace, then continue.
+- If it already exists: skip this step and continue.
 
 ## Step 3: Ask these questions
 
@@ -255,6 +273,8 @@ Write `.claude/agents/_team.md` with this content:
 
 ## Step 11: Write OpenSpec routing to `CLAUDE.md`
 
+OpenSpec is a required part of the Teambuilder workflow. This step writes the routing block that tells Claude which persona to use for each OpenSpec command.
+
 Check whether `CLAUDE.md` in the project root already contains `## OpenSpec + Teambuilder`. If it does, skip this step to avoid duplication.
 
 If not, append the following block to `CLAUDE.md` (creating the file if it doesn't exist):
@@ -262,15 +282,14 @@ If not, append the following block to `CLAUDE.md` (creating the file if it doesn
 ```
 ## OpenSpec + Teambuilder
 
-When using OpenSpec, route to project personas if they exist in `.claude/agents/`:
+OpenSpec is the change-management workflow for this project. Route each OpenSpec command to the appropriate Teambuilder persona or orchestration skill:
 
 - `/opsx:explore` or `openspec-explore` → use `analyst.md` as the thinking partner
 - `/opsx:propose` or `openspec-propose` → use `architect.md` to drive artifact creation
-- `/opsx:apply` or `openspec-apply-change` → infer from pending tasks in `tasks.md`:
-  - Design/UX tasks → `designer.md`
-  - Implementation tasks → `programmer.md` or `programmer-<variant>.md`
-  - Testing tasks → `tester.md`
-  - Proceed without a persona if the relevant one doesn't exist yet
+- `/opsx:apply` or `openspec-apply-change` → after the skill reads context and shows progress, invoke the `teambuilder-apply-dispatch-loop` skill to dispatch each pending task in `tasks.md` to the right persona (Designer for design/UX tasks, Tester for testing tasks, Programmer for everything else) in a fresh subagent.
+- `/opsx:archive` or `openspec-archive-change` → before running any archival steps, invoke the `teambuilder-review-gate` skill to run the Reviewer persona over the completed change and surface findings to the user.
+
+Inline persona invocation ("use the programmer", "use the designer", etc.) remains available for small or off-workflow tasks. The orchestrated path above is the default for non-trivial work.
 ```
 
 ## Step 12: Confirm and prompt
@@ -288,6 +307,7 @@ Tell the user what was discovered and what files were written. Be specific. For 
 > **Stack:** React/TypeScript (frontend at `apps/web/`), Python/FastAPI (backend at `apps/api/`)
 > **Standards:** ESLint + Prettier (frontend), Ruff (backend)
 > **Testing:** Vitest (unit), Playwright (e2e), GitHub Actions CI
+> **OpenSpec:** Workspace ready at `openspec/`
 >
 > Written: `_project.md`, `_team.md`, `_stack.md`, `_standards.md`, `_testing.md`
 >

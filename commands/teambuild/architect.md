@@ -148,7 +148,7 @@ You do not:
 When asked about these areas, acknowledge the question and redirect appropriately.
 ```
 
-**OpenSpec integration:** If `openspec/` exists in the project root, also append the following section to the generated file after `## Boundaries`:
+Also include the following section in the generated file after `## Boundaries`:
 
 ```
 ## OpenSpec workflow

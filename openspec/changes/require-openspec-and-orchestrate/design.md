@@ -33,20 +33,24 @@ This change drops the optional framing. OpenSpec becomes a required prerequisite
 - *Vendor a minimal subset of OpenSpec into Teambuilder.* Rejected — duplicates effort, creates drift with the upstream tool the user already has.
 - *Warn but continue without OpenSpec.* Rejected — half-required isn't required; we'd still need the conditional branches.
 
-### Decision 2: `/opsx:apply` is a subagent-driven dispatch loop
+### Decision 2: Dispatch loop and Reviewer gate live in dedicated Teambuilder skills, wired via the CLAUDE.md routing block
 
-The rewritten skill follows this shape:
+Teambuilder does not fork or modify OpenSpec's own skills (`openspec-apply-change`, `openspec-archive-change`) or its `/opsx:*` commands. Instead, the orchestration logic lives in two new Teambuilder-owned skills:
 
-1. **Load change.** Read `tasks.md`, `proposal.md`, `design.md`, and the list of files under `specs/` for the active change.
-2. **Enumerate pending tasks.** A pending task is an unchecked checklist item (`- [ ]`) in `tasks.md`. Completed tasks (`- [x]`) are skipped.
-3. **Classify each task.** Classification uses the `tasks.md` section the task lives under (see Decision 3).
-4. **Dispatch in a fresh subagent.** For each pending task, in order: invoke the matching persona (Designer / Programmer / Tester) via the Agent tool, passing a prompt containing (a) the task text verbatim, (b) paths to `proposal.md`, `design.md`, and relevant spec files as pointers, and (c) the explicit instruction to self-verify and mark the task complete when done. No session history is inherited.
-5. **Check persona output.** On return, verify the task is marked complete in `tasks.md`. If not, surface the subagent's final message to the user and stop the loop — do not advance to the next task.
-6. **Loop.** Repeat until no pending tasks remain, then exit with a summary.
+- **`teambuilder-apply-dispatch-loop`** — owns the subagent dispatch loop. Given an active change, it reads `tasks.md`, classifies each pending task by section (see Decision 3), dispatches each to the matching persona (Designer / Programmer / Tester) in a fresh subagent via the Agent tool with task text verbatim and file-path pointers only, then verifies the subagent marked the task complete. Halts on missing-persona or stalled-task conditions.
+- **`teambuilder-review-gate`** — owns the archive-time Reviewer gate. Invokes the Reviewer persona over the full change directory plus the code diff, surfaces findings to the user, and asks whether to proceed with archival. Findings are non-blocking.
 
-There is deliberately **no** Reviewer step in this loop. The Reviewer gate lives at archive time (Decision 4).
+These skills are wired into the workflow through the `## OpenSpec + Teambuilder` routing block that `/teambuild:init` appends to the project's `CLAUDE.md`. The routing block tells Claude: when running `/opsx:apply`, after OpenSpec's own skill reads context and shows progress, invoke `teambuilder-apply-dispatch-loop`. When running `/opsx:archive`, before archival proceeds, invoke `teambuilder-review-gate`.
+
+**Why this shape:**
+- **No forking.** Teambuilder doesn't fight OpenSpec for ownership of its own files. OpenSpec ships updates, users pull them in, and nothing breaks.
+- **Discoverable.** Dedicated skills appear in the skills catalogue with their own descriptions; the orchestration is a first-class piece of Teambuilder, not a hidden branch inside an upstream skill.
+- **Thin routing block.** CLAUDE.md carries pointers, not logic. The dispatch loop and gate can evolve independently without touching every project's CLAUDE.md.
+- **Uniform integration point.** Both new skills hang off the same CLAUDE.md convention, so there's one place to look to understand how Teambuilder augments OpenSpec.
 
 **Alternatives considered:**
+- *Modify `openspec-apply-change` and `openspec-archive-change` directly.* Rejected — forking another project's files creates drift and version-skew pain. Explicitly walked back after we prototyped it.
+- *Put full dispatch and gate logic inline in the CLAUDE.md routing block.* Rejected — bloats CLAUDE.md, hides logic from the skills catalogue, and makes the orchestration harder to update centrally.
 - *Full Superpowers-style controller with status protocol (DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED) and automated fix loops.* Rejected for now — adds meaningful surface area and requires disciplined subagent output formatting. The simpler loop above captures the core value (fresh context per task) without the coordination machinery. Can be added later if the simple loop proves insufficient.
 - *Dispatch all tasks in parallel.* Rejected — OpenSpec tasks often have implicit ordering (e.g., create the type before using it), and parallel dispatch risks write conflicts on `tasks.md`.
 
@@ -65,9 +69,9 @@ If `tasks.md` has no section structure, every task goes to Programmer. If a task
 - *Explicit persona tags in tasks.md* (e.g., `- [ ] (designer) do X`). Rejected — requires us to dictate `tasks.md` format, which OpenSpec controls upstream. We match OpenSpec's existing structure instead.
 - *Ask the user per task.* Rejected — too interactive for a loop that may have many tasks.
 
-### Decision 4: Reviewer runs at archive time, inside `/opsx:archive`
+### Decision 4: Reviewer runs at archive time, via the `teambuilder-review-gate` skill invoked from `/opsx:archive`
 
-The Reviewer gate lives inside `/opsx:archive` (not at the end of `/opsx:apply`). Before archival proceeds, the skill invokes the Reviewer persona in a subagent with access to the whole change directory and a diff of the code changes the apply loop produced. The Reviewer returns findings; the skill surfaces them to the user and asks whether to proceed with archival or not. Findings are non-blocking.
+The Reviewer gate fires at archive time (not at the end of `/opsx:apply`). Mechanically, it is the `teambuilder-review-gate` skill (see Decision 2), invoked from the CLAUDE.md routing block whenever `/opsx:archive` runs. Before archival proceeds, the gate invokes the Reviewer persona in a subagent with access to the whole change directory and a diff of the code changes produced during the change. The Reviewer returns findings; the gate surfaces them to the user and asks whether to proceed with archival or not. Findings are non-blocking.
 
 **Why inside archive rather than at the end of apply:**
 - `/opsx:apply` may be run multiple times as work progresses; triggering review at every partial run is noise.

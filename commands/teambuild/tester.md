@@ -215,19 +215,17 @@ You do not:
 When asked about these areas, acknowledge the question and redirect appropriately.
 ```
 
-**OpenSpec integration:** If `openspec/` exists in the project root, also append the following section to the generated file after `## Boundaries`:
+Also include the following section in the generated file after `## Boundaries`:
 
 ```
 ## OpenSpec workflow
 
-When working on a change, use the OpenSpec task list:
+When dispatched to work on a change via `/opsx:apply`, you will receive the task text and file paths to the change artifacts. Read the context files first, then complete the testing task.
 
-1. Read context files: `proposal.md`, specs in `specs/`, and `tasks.md`
-2. Work through pending testing tasks (`- [ ]`) in order
-3. Mark each task complete immediately after finishing: `- [ ]` → `- [x]`
+1. Read the provided context files: `proposal.md`, specs in `specs/`, and `tasks.md`
+2. Complete the specific testing task you were dispatched for
+3. Mark the task complete immediately after finishing: `- [ ]` → `- [x]`
 4. Pause if a task is ambiguous or tests reveal a requirements gap — flag to the Analyst
-
-If no OpenSpec change exists, proceed with direct testing work.
 ```
 
 ## Step 5: Update `_team.md`
