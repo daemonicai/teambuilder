@@ -1,19 +1,67 @@
 $ErrorActionPreference = 'Stop'
 
 $RepoUrl = "https://github.com/daemonicai/teambuilder.git"
+$RepoApi = "https://api.github.com/repos/daemonicai/teambuilder/releases/latest"
 $InstallDir = Join-Path $HOME ".claude\teambuilder"
 $CommandsSrc = Join-Path $InstallDir "commands\teambuild"
 $CommandsDst = Join-Path $HOME ".claude\commands\teambuild"
 $SkillsSrcDir = Join-Path $InstallDir "skills"
 $SkillsDstDir = Join-Path $HOME ".claude\skills"
 
-# Install or update
-if (Test-Path (Join-Path $InstallDir ".git")) {
-    Write-Host "Updating teambuilder..."
-    git -C $InstallDir pull --ff-only
+# Resolve the target ref. Priority: $env:VERSION > latest GitHub release > main (bootstrap).
+function Resolve-Target {
+    if ($env:VERSION) {
+        return $env:VERSION
+    }
+    try {
+        $release = Invoke-RestMethod -Uri $RepoApi -UseBasicParsing -ErrorAction Stop
+        if ($release.tag_name) {
+            return $release.tag_name
+        }
+    } catch {
+        # Fall through to bootstrap fallback.
+    }
+    return "main"
+}
+
+$Target = Resolve-Target
+
+if ($Target -eq "main") {
+    Write-Host "No release tag found (or VERSION=main). Installing from main - this is an unreleased build."
 } else {
-    Write-Host "Installing teambuilder..."
-    git clone --depth 1 --branch release $RepoUrl $InstallDir
+    Write-Host "Target: $Target"
+}
+
+# Determine the current ref of an existing install.
+function Get-CurrentRef {
+    if (-not (Test-Path (Join-Path $InstallDir ".git"))) {
+        return $null
+    }
+    # Detached HEAD on a tag?
+    $tag = git -C $InstallDir describe --tags --exact-match 2>$null
+    if ($LASTEXITCODE -eq 0 -and $tag) {
+        return $tag.Trim()
+    }
+    # On a branch?
+    $branch = git -C $InstallDir symbolic-ref --short HEAD 2>$null
+    if ($LASTEXITCODE -eq 0 -and $branch) {
+        return $branch.Trim()
+    }
+    return "unknown"
+}
+
+$Current = Get-CurrentRef
+
+# Install or update.
+if (-not $Current) {
+    Write-Host "Installing teambuilder at $Target..."
+    git clone --depth 1 --branch $Target $RepoUrl $InstallDir
+} elseif ($Current -eq $Target) {
+    Write-Host "teambuilder is already at $Target. Refreshing symlinks only."
+} else {
+    Write-Host "Migrating teambuilder from $Current to $Target..."
+    Remove-Item -Recurse -Force $InstallDir
+    git clone --depth 1 --branch $Target $RepoUrl $InstallDir
 }
 
 # Ensure ~/.claude/commands exists

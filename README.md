@@ -23,13 +23,29 @@ curl -fsSL https://openspec.dev/install.sh | bash
 curl -fsSL https://daemonicai.github.io/teambuilder/install.sh | bash
 ```
 
-Re-running updates an existing installation.
+Re-running updates an existing installation to the latest release.
 
 ### Windows
 
 ```powershell
 irm https://daemonicai.github.io/teambuilder/install.ps1 | iex
 ```
+
+### Pin a version
+
+The install scripts install the latest GitHub release by default. To pin to a specific version, set `VERSION`:
+
+```bash
+# macOS / Linux
+curl -fsSL https://daemonicai.github.io/teambuilder/install.sh | VERSION=v0.2.0 bash
+```
+
+```powershell
+# Windows
+$env:VERSION = "v0.2.0"; irm https://daemonicai.github.io/teambuilder/install.ps1 | iex
+```
+
+Use `VERSION=main` to install the current trunk (unreleased).
 
 ---
 
