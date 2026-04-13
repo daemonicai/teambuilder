@@ -23,7 +23,7 @@
 
 ## 4. Build the `teambuilder-apply-dispatch-loop` skill
 
-- [x] 4.1 Create `.claude/skills/teambuilder-apply-dispatch-loop/SKILL.md` with frontmatter declaring it a Teambuilder-owned skill that the CLAUDE.md routing block invokes from `/opsx:apply`
+- [x] 4.1 Create `skills/teambuilder-apply-dispatch-loop/SKILL.md` in the repo root (source of shippable skills) with frontmatter declaring it a Teambuilder-owned skill that the CLAUDE.md routing block invokes from `/opsx:apply`
 - [x] 4.2 Implement pending-task enumeration that reads `tasks.md` for the active change and collects every `- [ ]` checklist item in source order
 - [x] 4.3 Implement section-based task classification: headings matching `/design|ux|ui/i` → Designer, headings matching `/test/i` → Tester, all other sections and unheadered tasks → Programmer
 - [x] 4.4 Implement per-task dispatch via the Agent tool, passing a prompt that contains the task text verbatim and absolute paths to `proposal.md`, `design.md`, and the change's `specs/` directory — without embedding the contents of those files
@@ -33,7 +33,7 @@
 
 ## 5. Build the `teambuilder-review-gate` skill
 
-- [x] 5.1 Create `.claude/skills/teambuilder-review-gate/SKILL.md` with frontmatter declaring it a Teambuilder-owned skill that the CLAUDE.md routing block invokes from `/opsx:archive` before archival steps run
+- [x] 5.1 Create `skills/teambuilder-review-gate/SKILL.md` in the repo root (source of shippable skills) with frontmatter declaring it a Teambuilder-owned skill that the CLAUDE.md routing block invokes from `/opsx:archive` before archival steps run
 - [x] 5.2 Construct the Reviewer prompt with paths to the active change's `proposal.md`, `design.md`, `specs/`, `tasks.md`, and a diff of the code changes produced during the change
 - [x] 5.3 Invoke the Reviewer persona via the Agent tool using that prompt, and halt the gate if `.claude/agents/reviewer.md` is absent with a message instructing the user to run `/teambuild:reviewer` first
 - [x] 5.4 Display Reviewer findings to the user and ask whether to proceed with archival; return a proceed signal to the caller if the user confirms, a halt signal if they decline
