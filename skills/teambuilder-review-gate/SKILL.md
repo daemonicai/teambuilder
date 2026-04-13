@@ -21,21 +21,30 @@ Run the Teambuilder Reviewer persona over a completed OpenSpec change and surfac
 
 2. **Collect the code diff**
 
-   Get a diff of the code changes produced during this change:
+   Goal: produce the diff of code changes made while working on this change.
 
-   ```bash
-   git diff main...HEAD
-   ```
+   a. **Detect the base ref.** Try these in order, and stop at the first that resolves:
+      1. `git symbolic-ref --short refs/remotes/origin/HEAD` (returns e.g. `origin/main`)
+      2. `origin/main`, then `origin/master` (verify with `git rev-parse --verify <ref>`)
+      3. `main`, then `master` (verify with `git rev-parse --verify <ref>`)
 
-   If `main` is not the base branch, use `git log --oneline` to identify the appropriate base.
+      If none resolve, stop and ask the user: "I couldn't detect a base branch automatically. What should I diff against? (e.g., `origin/develop`)"
+
+   b. **Compute the merge base**: `git merge-base HEAD <base-ref>`.
+
+   c. **Produce the diff**: `git diff <merge-base>..HEAD`.
+
+      Also run `git diff HEAD` and `git diff --cached` to capture any uncommitted or staged changes; append them (labelled) if non-empty.
+
+   d. **Handle the "on the base branch" case.** If `<merge-base>` equals `HEAD` (the user is working directly on the base branch), the committed diff is empty. Surface this to the user: "This change appears to be committed directly on the base branch — there is no feature-branch diff. Do you want me to diff the last N commits instead, or abort the review?" Wait for guidance before invoking the Reviewer.
 
 3. **Invoke the Reviewer via the Agent tool**
 
-   Use `subagent_type: "general-purpose"` with this prompt:
+   Use `subagent_type: "reviewer"` (the persona file at `.claude/agents/reviewer.md` is registered as a subagent by its `name:` frontmatter — Claude Code loads it as the system prompt automatically, no need to tell the subagent to read it). If the Agent tool rejects `"reviewer"` as an unknown subagent type in this environment, fall back to `subagent_type: "general-purpose"` and prepend "Read and adopt the persona defined in `.claude/agents/reviewer.md` before starting." to the prompt.
+
+   Prompt:
 
    ```
-   Use the Reviewer persona defined in `.claude/agents/reviewer.md`. Read that file before starting.
-
    You are performing a per-change review at archive time for the change: <change-name>
 
    Read these change artifacts:

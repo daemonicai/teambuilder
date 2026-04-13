@@ -6,14 +6,21 @@ You are running the `/teambuild:init` setup flow. Your job is to gather basic pr
 
 ## Step 0: Check for OpenSpec
 
-Before doing anything else, verify that the `openspec` command-line tool is installed.
+Before doing anything else, verify that the `openspec` command-line tool is installed and resolvable on `PATH`.
 
-Probe by running `openspec --version`. If the command is not found:
+Run `openspec --version` and treat any of the following as "not installed":
+
+- Non-zero exit code
+- Shell error on bash/zsh: `command not found`
+- PowerShell error: `CommandNotFoundException` / `is not recognized as the name of a cmdlet`
+- No output, or output that does not look like a version string (e.g., `0.12.3`)
+
+If the tool is not installed:
 
 - Stop immediately. Do not create any files.
 - Tell the user: "Teambuilder requires OpenSpec. Install it from https://openspec.dev and then re-run `/teambuild:init`."
 
-If the command is found, continue.
+If `openspec --version` prints a version string and exits 0, continue.
 
 ## Step 1: Check for existing context
 

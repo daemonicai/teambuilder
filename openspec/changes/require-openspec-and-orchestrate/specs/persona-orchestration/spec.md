@@ -34,6 +34,26 @@
 - **WHEN** `/opsx:apply` encounters a pending task under a heading that matches neither the Designer nor Tester patterns, or has no heading
 - **THEN** the task is dispatched to the Programmer persona
 
+### Requirement: Programmer variant routing is deterministic
+
+When routing a task to the Programmer, `/opsx:apply` SHALL enumerate available Programmer variant files (`.claude/agents/programmer-*.md`) and select a variant by whole-word substring match of the variant suffix against the task's section heading (case-insensitive). If exactly one variant matches, that variant file is used. If zero or more than one variant matches, the base `.claude/agents/programmer.md` is used. The dispatcher MUST NOT apply heuristic matching beyond this rule.
+
+#### Scenario: Heading contains exactly one variant suffix
+
+- **WHEN** a Programmer-classified task lives under a heading whose text contains exactly one variant suffix as a whole-word substring (e.g., heading `## iOS implementation` with `programmer-ios.md` present)
+- **THEN** the task is dispatched to `.claude/agents/programmer-<variant>.md`
+
+#### Scenario: Heading contains no variant suffix
+
+- **WHEN** a Programmer-classified task lives under a heading whose text contains no variant suffix from the available variant files, or no Programmer variant files exist
+- **THEN** the task is dispatched to the base `.claude/agents/programmer.md`
+
+#### Scenario: Heading matches multiple variant suffixes
+
+- **WHEN** a Programmer-classified task lives under a heading whose text contains two or more variant suffixes as whole-word substrings (e.g., heading `## iOS and Web shared setup` with both `programmer-ios.md` and `programmer-web.md` present)
+- **THEN** the task is dispatched to the base `.claude/agents/programmer.md`
+- **AND** the dispatcher does not prompt the user to disambiguate
+
 #### Scenario: Persona needed for a task does not exist
 
 - **WHEN** `/opsx:apply` classifies a task to a persona whose file is missing from `.claude/agents/`

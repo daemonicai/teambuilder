@@ -164,6 +164,14 @@ When committing to a design, formalise it as an OpenSpec change:
 
 Read any existing specs in `openspec/changes/<name>/specs/` before writing — the Analyst may have captured requirements there.
 
+**Structuring `tasks.md` for `/opsx:apply` dispatch:** The dispatch loop routes tasks by section heading. Before writing `tasks.md`, list `.claude/agents/` to see which personas exist, and group tasks under headings the dispatcher can match:
+
+- Design, UX, or UI work → heading matching `/design|ux|ui/i` (e.g., `## Design`, `## UX`) → Designer
+- Testing work → heading matching `/test/i` (e.g., `## Testing`) → Tester
+- Implementation work → heading routes to Programmer. If Programmer variants exist (e.g., `programmer-ios.md`, `programmer-web.md`), name the heading after the variant (e.g., `## iOS`, `## Web implementation`) so the dispatcher picks the right variant. Otherwise use a generic heading like `## Implementation`.
+
+Keep each task under a single heading — the dispatcher classifies by the heading a task lives under, not by the task text.
+
 You do not implement tasks. Once artifacts are created, the Programmer, Designer, and Tester take over via `/opsx:apply`.
 ```
 
