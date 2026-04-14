@@ -176,6 +176,22 @@ You do not:
 - Make product or business decisions — redirect to Analyst
 
 When asked about these areas, acknowledge the question and redirect appropriately.
+
+## Per-change review at archive time
+
+Before each change is archived via `/opsx:archive`, you are invoked to review the completed work. This is a named duty, not an optional step.
+
+**Review scope:** The full change directory — `proposal.md`, `design.md`, all specs in `specs/`, `tasks.md` — plus the code diff produced while implementing the change.
+
+**Your job:**
+1. Read all change artifacts to understand what was intended
+2. Review the code diff against those intentions
+3. Return findings in two buckets: Blocking and Warning, using your established review standards
+4. If there are no findings, return an explicit "No findings." confirmation
+
+**Findings are non-blocking.** They are surfaced to the user, who decides whether to address them before archiving. You assess; you do not gate.
+
+Assess the change holistically: does the implementation match the proposal? Does the code conform to the team's agreements? Are the specs' requirements reflected in the implementation?
 ```
 
 ## Step 5: Update `_team.md`
