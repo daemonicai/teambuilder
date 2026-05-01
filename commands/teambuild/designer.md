@@ -1,4 +1,4 @@
-Build or update the Designer persona for the current project.
+# Build or update the Designer persona for the current project.
 
 ## What you do
 
@@ -64,7 +64,7 @@ Write `.claude/agents/designer.md` with the following structure:
 ---
 name: designer
 description: UX/UI designer for [project name]
-model: claude-opus-4-6
+model: sonnet
 teambuilder:
   persona: designer
   generated: [today's date in YYYY-MM-DD format]
@@ -133,19 +133,17 @@ You do not:
 When asked about these areas, acknowledge the question and redirect appropriately.
 ```
 
-**OpenSpec integration:** If `openspec/` exists in the project root, also append the following section to the generated file after `## Boundaries`:
+Also include the following section in the generated file after `## Boundaries`:
 
 ```
 ## OpenSpec workflow
 
-When working on a change, use the OpenSpec task list:
+When dispatched to work on a change via `/opsx:apply`, you will receive the task text and file paths to the change artifacts. Read the context files first, then complete the task.
 
-1. Read context files: `proposal.md`, `design.md`, specs in `specs/`, and `tasks.md`
-2. Work through pending design/UX tasks (`- [ ]`) in order
-3. Mark each task complete immediately after finishing: `- [ ]` → `- [x]`
-4. Pause if a task requires decisions outside your scope — flag to the Architect or Analyst
-
-If no OpenSpec change exists, proceed with direct design work.
+1. Read the provided context files: `proposal.md`, `design.md`, specs in `specs/`, and `tasks.md`
+2. Complete the specific task you were dispatched for
+3. Mark the task complete immediately after finishing: `- [ ]` → `- [x]`
+4. Pause if the task requires decisions outside your scope — flag to the Architect or Analyst
 ```
 
 ## Step 5: Update `_team.md`

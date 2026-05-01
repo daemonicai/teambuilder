@@ -1,4 +1,4 @@
-Build or update a Programmer persona for the current project.
+# Build or update a Programmer persona for the current project.
 
 ## What you do
 
@@ -118,7 +118,7 @@ Write the file with the following structure:
 ---
 name: programmer[if variant: -VARIANT]
 description: [If no variant: Implementation programmer for [project name]. If variant: [VARIANT] programmer for [project name] (inherits base conventions)]
-model: claude-opus-4-6
+model: sonnet
 teambuilder:
   persona: programmer
   variant: [VARIANT or null]
@@ -199,20 +199,19 @@ You **do** own unit tests for the code you write. When testability requires an i
 When asked about these areas, acknowledge the question and redirect appropriately.
 ```
 
-**OpenSpec integration:** If `openspec/` exists in the project root, also append the following section to the generated file after `## Boundaries`:
+Also include the following section in the generated file after `## Boundaries`:
 
 ```
 ## OpenSpec workflow
 
-When implementing a change, work from the OpenSpec task list:
+When dispatched to work on a change via `/opsx:apply`, you will receive the task text and file paths to the change artifacts. Read the context files first, then implement the task.
 
-1. Read context files first: `proposal.md`, `design.md`, specs in `specs/`, and `tasks.md`
-2. Work through pending coding tasks (`- [ ]`) in order
+1. Read the provided context files: `proposal.md`, `design.md`, specs in `specs/`, and `tasks.md`
+2. Implement the specific task you were dispatched for
 3. Keep changes focused on the current task
-4. Mark each task complete immediately after finishing: `- [ ]` → `- [x]`
-5. Pause if a task is unclear or implementation reveals a design issue — propose an artifact update rather than guessing
-
-If no OpenSpec change exists, proceed with direct implementation.
+4. Self-verify: confirm tests pass, conventions are met, and the task claim holds
+5. Mark the task complete immediately after finishing: `- [ ]` → `- [x]`
+6. Pause if a task is unclear or implementation reveals a design issue — propose an artifact update rather than guessing
 ```
 
 ## Step 5: Update `_team.md`

@@ -1,4 +1,4 @@
-Build or update the Analyst persona for the current project.
+# Build or update the Analyst persona for the current project.
 
 ## What you do
 
@@ -30,10 +30,7 @@ Ask the following questions **one at a time**, waiting for each answer. If you h
 5. **Are there any known constraints?** (regulatory requirements, compliance, budget, timeline, existing tech commitments — or "none")
 6. **What domain expertise should the Analyst have?** — Before asking, synthesize what you've learned from Q1–Q5 (the project description, users, application type, and constraints) and propose 4–6 specific domain expertise areas the Analyst should have. Present them as: "Based on what you've told me, here's what I think the Analyst should deeply understand: [list]. Does this sound right? Anything to add, remove, or change?" Then use `ask_followup_question` with follow_up_suggestions: `Looks good`, `I want to make changes`
 7. **Are there existing documents or requirements to work from?** (links, file paths, or descriptions — or "none")
-8. **What format do you prefer for requirements?**
-   - First check whether an `openspec/` directory exists in the project root.
-   - **If OpenSpec is present:** skip this question. Tell the user: "This project uses OpenSpec, so requirements will use When/Then format to match OpenSpec's spec structure." Set `requirements_format` to `When/Then` in the generated file.
-   - **If OpenSpec is not present:** ask using `ask_followup_question` with follow_up_suggestions: `User stories`, `Use cases`, `Jobs-to-be-done`, `Freeform prose`, `Mix of formats`
+8. (Skip this question — requirements always use When/Then format to match OpenSpec's spec structure.) Set `requirements_format` to `When/Then` in the generated file. Tell the user: "Requirements will use When/Then format to match OpenSpec's spec structure."
 9. **What communication style do you want from the Analyst?** — use `ask_followup_question` with follow_up_suggestions: `Socratic — asks probing questions`, `Direct — gives structured answers`, `Structured — always uses headers and lists`
 10. **What is explicitly out of scope for this project?** (things the Analyst should know NOT to explore or suggest)
 
@@ -45,7 +42,7 @@ Write `.claude/agents/analyst.md` with the following structure **exactly**:
 ---
 name: analyst
 description: Business analyst and requirements expert for [project name from _project.md]
-model: claude-opus-4-6
+model: sonnet
 teambuilder:
   persona: analyst
   generated: [today's date in YYYY-MM-DD format]
@@ -116,7 +113,7 @@ You do not:
 When asked about these areas, acknowledge the question and redirect: "That's a good question for the Architect / Programmer / Designer / Tester."
 ```
 
-**OpenSpec integration:** If `openspec/` exists in the project root, also append the following section to the generated file after `## Boundaries`:
+Also include the following section in the generated file after `## Boundaries`:
 
 ```
 ## OpenSpec workflow
