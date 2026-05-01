@@ -1,4 +1,4 @@
-Build or update a Programmer persona for the current project.
+# Build or update a Programmer persona for the current project.
 
 ## What you do
 
@@ -118,7 +118,7 @@ Write the file with the following structure:
 ---
 name: programmer[if variant: -VARIANT]
 description: [If no variant: Implementation programmer for [project name]. If variant: [VARIANT] programmer for [project name] (inherits base conventions)]
-model: claude-opus-4-6
+model: sonnet
 teambuilder:
   persona: programmer
   variant: [VARIANT or null]

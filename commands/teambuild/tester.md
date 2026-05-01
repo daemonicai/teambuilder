@@ -1,4 +1,4 @@
-Build or update the Tester persona for the current project.
+# Build or update the Tester persona for the current project.
 
 ## What you do
 
@@ -9,6 +9,7 @@ The Tester persona you create will be used as a Claude sub-agent — a quality a
 ## Step 1: Read project context
 
 Read the following files if they exist:
+
 - `.claude/agents/_project.md`
 - `.claude/agents/_team.md`
 - `.claude/agents/_stack.md`
@@ -123,7 +124,7 @@ Write `.claude/agents/tester.md` with the following structure:
 ---
 name: tester
 description: Quality and verification expert for [project name]
-model: claude-opus-4-6
+model: sonnet
 teambuilder:
   persona: tester
   generated: [today's date in YYYY-MM-DD format]
