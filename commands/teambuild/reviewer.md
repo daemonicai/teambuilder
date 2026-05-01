@@ -1,4 +1,4 @@
-Build or update the Reviewer persona for the current project.
+# Build or update the Reviewer persona for the current project.
 
 ## What you do
 
@@ -92,7 +92,7 @@ Write `.claude/agents/reviewer.md` with the following structure:
 ---
 name: reviewer
 description: Code reviewer and conformance expert for [project name]
-model: claude-opus-4-6
+model: opus
 teambuilder:
   persona: reviewer
   generated: [today's date in YYYY-MM-DD format]

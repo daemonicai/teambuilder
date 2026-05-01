@@ -1,4 +1,4 @@
-Build or update the Architect persona for the current project.
+# Build or update the Architect persona for the current project.
 
 ## What you do
 
@@ -67,7 +67,7 @@ Write `.claude/agents/architect.md` with the following structure:
 ---
 name: architect
 description: System architect and technology decision-maker for [project name]
-model: claude-opus-4-6
+model: opus
 teambuilder:
   persona: architect
   generated: [today's date in YYYY-MM-DD format]

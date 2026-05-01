@@ -1,4 +1,4 @@
-Build or update the Designer persona for the current project.
+# Build or update the Designer persona for the current project.
 
 ## What you do
 
@@ -64,7 +64,7 @@ Write `.claude/agents/designer.md` with the following structure:
 ---
 name: designer
 description: UX/UI designer for [project name]
-model: claude-opus-4-6
+model: sonnet
 teambuilder:
   persona: designer
   generated: [today's date in YYYY-MM-DD format]

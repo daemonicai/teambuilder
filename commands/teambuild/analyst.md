@@ -1,4 +1,4 @@
-Build or update the Analyst persona for the current project.
+# Build or update the Analyst persona for the current project.
 
 ## What you do
 
@@ -42,7 +42,7 @@ Write `.claude/agents/analyst.md` with the following structure **exactly**:
 ---
 name: analyst
 description: Business analyst and requirements expert for [project name from _project.md]
-model: claude-opus-4-6
+model: sonnet
 teambuilder:
   persona: analyst
   generated: [today's date in YYYY-MM-DD format]
